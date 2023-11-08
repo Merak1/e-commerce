@@ -20,7 +20,6 @@ const HomeBanner = () => {
         </div>
         <div className="w-1/3 relative aspect-video">
           <Image
-            // src="/watame.jpg"
             src="/watame.png"
             alt="Banner Image"
             fill
