@@ -1,6 +1,10 @@
 "use client";
 
-export const Horizontal = ({ length }) => {
-  console.log(length);
-  return <hr className={`w-[${length}%] my-2  `} />;
+interface HorizontalProps {
+  length: number;
+}
+export const Horizontal: React.FC<HorizontalProps> = ({ length }) => {
+  let style = `w-[${length}%]`;
+  console.log(style);
+  return <hr className={`${style} my-2`} />;
 };
