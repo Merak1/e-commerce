@@ -15,16 +15,15 @@ const Product = ({ params }: { params: Iparams }) => {
     <div>
       <Container>
         <ProductDetails product={product} />
-        <div className="flex flex-col mt-20 gap-4 w-[80%]">
+        <div className="flex flex-col mt-20 gap-4 ">
           <div>Add rating</div>
           <ListRating product={product} />
           <div className="text-small mt-2 ">
             {product.reviews &&
               product.reviews.map((review) => {
                 return (
-                  <div key={review.id} className="max-w-300px">
+                  <div key={review.id} className="max-w-[300px]">
                     <div className="flex gap-2 items-center">
-                      {/* <div>Avatar</div> */}
                       <Avatar src={review.user.image} />
                       <div className="font-semibold"> {review?.user.name} </div>
                       <div className="font-light">
