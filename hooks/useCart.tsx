@@ -15,13 +15,13 @@ export const CartContextProvider = (props: Props) => {
   const value = {
     cartTotalQuantity: 0,
   };
-  return <CartContext.Provider value={value} />;
+  return <CartContext.Provider value={value} {...props} />;
 };
 
-export const useCart = (props: Props) => {
+export const useCart = () => {
   const context = useContext(CartContext);
 
-  if (!context) {
+  if (context === null) {
     throw new Error("useCart must be used within a CartContextProvider");
   }
 

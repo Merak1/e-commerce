@@ -23,7 +23,6 @@ const HomeBanner = () => {
             src="/watame.png"
             alt="Banner Image"
             fill
-            layout="fill"
             className="object-contain"
           />
         </div>

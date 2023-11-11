@@ -8,6 +8,7 @@ import SetQuantity from "@/app/components/products/SetQuantity";
 import Button from "@/app/components/Button";
 import ProductImage from "@/app/components/products/ProductImage";
 import { Horizontal } from "@/app/components/Horizontal";
+import { useCart } from "@/hooks/useCart";
 
 interface ProductDetailsProps {
   product: any;
@@ -31,6 +32,7 @@ export type selectedImageType = {
 };
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
+  const { cartTotalQuantity } = useCart();
   const rating = productRating(product);
   const [cartProduct, setCartProduct] = useState<CardProductType>({
     id: product.id,
@@ -71,7 +73,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       };
     });
   }, []);
-
+  console.log(cartTotalQuantity);
   return (
     <div className="grid grid-cols-1  md:grid-cols-2 gap-12 mt-6">
       <ProductImage
