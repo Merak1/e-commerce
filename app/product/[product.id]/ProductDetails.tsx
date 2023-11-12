@@ -8,7 +8,7 @@ import SetQuantity from "@/app/components/products/SetQuantity";
 import Button from "@/app/components/Button";
 import ProductImage from "@/app/components/products/ProductImage";
 import { Horizontal } from "@/app/components/Horizontal";
-import { useCart } from "@/hooks/useCart";
+import { LOCAL_STORAGE_CARTITEMS, useCart } from "@/hooks/useCart";
 import { MdCheckCircle } from "react-icons/md";
 import { useRouter } from "next/navigation";
 
@@ -134,6 +134,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                 onClick={() => {
                   router.push("/cart");
                 }}
+              />
+              <Button
+                label="delete local storage"
+                onClick={() => {
+                  localStorage.removeItem(LOCAL_STORAGE_CARTITEMS);
+                  setProductInCart(false);
+                }} // dev only do not send to production
               />
             </div>
           </>
