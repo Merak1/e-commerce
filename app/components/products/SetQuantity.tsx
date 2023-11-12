@@ -1,11 +1,11 @@
 "use client";
 
-import { CardProductType } from "@/app/product/[product.id]/ProductDetails";
+import { CartProductType } from "@/app/product/[product.id]/ProductDetails";
 import React from "react";
 
 interface SetQuantityProps {
   cartCounter?: boolean;
-  cartProduct: CardProductType;
+  cartProduct: CartProductType;
   handleQtyIncrease: () => void;
   handleQtyDecrease: () => void;
 }

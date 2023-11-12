@@ -1,14 +1,14 @@
 "use client";
 
 import {
-  CardProductType,
+  CartProductType,
   selectedImageType,
 } from "@/app/product/[product.id]/ProductDetails";
 import { dividerClasses } from "@mui/material";
 
 interface SetColorProps {
   images: selectedImageType[];
-  cartProduct: CardProductType;
+  cartProduct: CartProductType;
   handleColorSelect: (value: selectedImageType) => void;
 }
 
