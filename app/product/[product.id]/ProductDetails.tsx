@@ -3,18 +3,20 @@
 import SetColor from "@/app/components/products/SetColor";
 import { productRating } from "@/utils/productRating";
 import { Rating } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SetQuantity from "@/app/components/products/SetQuantity";
 import Button from "@/app/components/Button";
 import ProductImage from "@/app/components/products/ProductImage";
 import { Horizontal } from "@/app/components/Horizontal";
 import { useCart } from "@/hooks/useCart";
+import { MdCheckCircle } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 interface ProductDetailsProps {
   product: any;
 }
 
-export type CardProductType = {
+export type CartProductType = {
   id: string;
   name: string;
   description: string;
@@ -32,9 +34,11 @@ export type selectedImageType = {
 };
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
-  const { cartTotalQuantity } = useCart();
+  const router = useRouter();
+  const { cartTotalQuantity, cartProducts, handleAddProductToCart } = useCart();
+  const [isProductInCart, setProductInCart] = useState(false);
   const rating = productRating(product);
-  const [cartProduct, setCartProduct] = useState<CardProductType>({
+  const [cartProduct, setCartProduct] = useState<CartProductType>({
     id: product.id,
     name: product.name,
     description: product.description,
@@ -73,7 +77,22 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       };
     });
   }, []);
-  console.log(cartTotalQuantity);
+
+  useEffect(() => {
+    console.log("cartProducts 🟠 ", cartProducts);
+    console.log("product 🟢 ", product);
+    setProductInCart(false);
+    if (cartProducts && product) {
+      const existingIndex = cartProducts.findIndex(
+        (item) => item.id === product.id
+      ); // returns -1 if not found
+
+      if (existingIndex > -1) {
+        setProductInCart(true);
+      }
+    }
+  }, [cartProducts]);
+
   return (
     <div className="grid grid-cols-1  md:grid-cols-2 gap-12 mt-6">
       <ProductImage
@@ -100,7 +119,49 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           {product.inStock ? "In stock" : "Out of stock"}{" "}
         </div>
         <Horizontal length={30} />
-        <SetColor
+
+        {isProductInCart ? (
+          <>
+            <p className="mb-2 text-slate-500 flex items-center gap-1">
+              <MdCheckCircle size={20} className="text-teal-200" />
+              <span>Product added to cart</span>
+            </p>
+
+            <div className="max-w-[300px]">
+              <Button
+                label="view cart"
+                outline
+                onClick={() => {
+                  router.push("/cart");
+                }}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <SetColor
+              images={product.images}
+              cartProduct={cartProduct}
+              handleColorSelect={handleColorSelect}
+            />
+            <Horizontal length={30} />
+            <SetQuantity
+              cartProduct={cartProduct}
+              handleQtyIncrease={handleQtyIncrease}
+              handleQtyDecrease={handleQtyDecrease}
+            />
+            <Horizontal length={30} />
+            <div className="max-w-[300px]">
+              <Button
+                label="Add to cart"
+                onClick={() => {
+                  handleAddProductToCart(cartProduct);
+                }}
+              />
+            </div>
+          </>
+        )}
+        {/* <SetColor
           images={product.images}
           cartProduct={cartProduct}
           handleColorSelect={handleColorSelect}
@@ -113,8 +174,13 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         />
         <Horizontal length={30} />
         <div className="max-w-[300px]">
-          <Button label="Add to cart" onClick={() => {}} />
-        </div>
+          <Button
+            label="Add to cart"
+            onClick={() => {
+              handleAddProductToCart(cartProduct);
+            }}
+          />
+        </div> */}
       </div>
     </div>
   );
