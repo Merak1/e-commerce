@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+const LOCAL_STORAGE_CARTITEMS = "eshopCart";
 type CartContextType = {
   cartTotalQuantity: number;
   cartProducts: CartProductType[] | null;
@@ -25,6 +26,16 @@ export const CartContextProvider = (props: Props) => {
   );
 
   useEffect(() => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      const cartItemsLS: any = localStorage.getItem(LOCAL_STORAGE_CARTITEMS);
+
+      const cart: CartProductType[] | null = JSON.parse(cartItemsLS);
+
+      setCartProducts(cart);
+    }
+  }, []);
+
+  useEffect(() => {
     console.log("cartProducts from userCart hook", cartProducts);
   }, [cartProducts]);
 
@@ -39,6 +50,11 @@ export const CartContextProvider = (props: Props) => {
         } else {
           updatedCart = [product];
         }
+
+        localStorage.setItem(
+          LOCAL_STORAGE_CARTITEMS,
+          JSON.stringify(updatedCart)
+        );
 
         return updatedCart;
       });
