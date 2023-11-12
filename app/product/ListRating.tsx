@@ -1,6 +1,6 @@
 "use client";
 
-import Headigng from "../components/Heading";
+import Heading from "../components/Heading";
 
 interface ListRatingProps {
   product: any;
@@ -8,7 +8,7 @@ interface ListRatingProps {
 const ListRating: React.FC<ListRatingProps> = ({ product }) => {
   return (
     <div>
-      <Headigng title="Product Review" />
+      <Heading title="Product Review" />
     </div>
   );
 };
