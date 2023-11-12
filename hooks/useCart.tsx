@@ -1,4 +1,5 @@
 import { CartProductType } from "@/app/product/[product.id]/ProductDetails";
+import { maxItemsQuantity, minItemsQuantity } from "@/utils/constants";
 import {
   createContext,
   useCallback,
@@ -13,6 +14,10 @@ type CartContextType = {
   cartTotalQuantity: number;
   cartProducts: CartProductType[] | null;
   handleAddProductToCart: (product: CartProductType) => void;
+  handleRemoveProductFromCart: (product: CartProductType) => void;
+  handleCartQuantityIncrease: (product: CartProductType) => void;
+  handleCartQuantityDecrease: (product: CartProductType) => void;
+  handleClearCart: () => void;
 };
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -36,9 +41,9 @@ export const CartContextProvider = (props: Props) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("cartProducts from userCart hook", cartProducts);
-  }, [cartProducts]);
+  // useEffect(() => {
+  //   console.log("cartProducts from userCart hook", cartProducts);
+  // }, [cartProducts]);
 
   const handleAddProductToCart = useCallback(
     (product: CartProductType) => {
@@ -64,10 +69,99 @@ export const CartContextProvider = (props: Props) => {
     [cartProducts]
   );
 
+  const handleRemoveProductFromCart = useCallback(
+    (product: CartProductType) => {
+      if (cartProducts) {
+        const filteredProducts = cartProducts.filter((item) => {
+          return item.id !== product.id;
+        });
+        setCartProducts(filteredProducts);
+
+        toast.success("Product removed from cart", {
+          id: "Product removed from cart",
+        });
+        localStorage.setItem(
+          LOCAL_STORAGE_CARTITEMS,
+          JSON.stringify(filteredProducts)
+        );
+      }
+    },
+    [cartProducts]
+  );
+
+  const handleCartQuantityIncrease = useCallback(
+    (product: CartProductType) => {
+      let updatedCart;
+      if (product.quantity === maxItemsQuantity) {
+        return toast.error("too many items", { id: "too many items" });
+      }
+
+      if (cartProducts) {
+        updatedCart = [...cartProducts];
+
+        const existingIndex = cartProducts.findIndex(
+          (item) => item.id === product.id
+        );
+
+        if (existingIndex > -1) {
+          // product exist in cart
+          updatedCart[existingIndex].quantity =
+            updatedCart[existingIndex].quantity + 1;
+        }
+        localStorage.setItem(
+          LOCAL_STORAGE_CARTITEMS,
+          JSON.stringify(updatedCart)
+        );
+        setCartProducts(updatedCart);
+      }
+    },
+    [cartProducts]
+  );
+
+  const handleCartQuantityDecrease = useCallback(
+    (product: CartProductType) => {
+      let updatedCart;
+      if (product.quantity === minItemsQuantity) {
+        return toast.error("You 1 items", { id: "too many items" });
+      }
+
+      if (cartProducts) {
+        updatedCart = [...cartProducts];
+
+        const existingIndex = cartProducts.findIndex(
+          (item) => item.id === product.id
+        );
+
+        if (existingIndex > -1) {
+          // product exist in cart
+          updatedCart[existingIndex].quantity =
+            updatedCart[existingIndex].quantity - 1;
+        }
+        localStorage.setItem(
+          LOCAL_STORAGE_CARTITEMS,
+          JSON.stringify(updatedCart)
+        );
+        setCartProducts(updatedCart);
+      }
+    },
+    [cartProducts]
+  );
+
+  const handleClearCart = useCallback(() => {
+    setCartTotalQuantity(0);
+    setCartProducts(null);
+
+    localStorage.setItem(LOCAL_STORAGE_CARTITEMS, JSON.stringify(null));
+  }, [cartProducts]);
+
   const value = {
     cartTotalQuantity: 0,
     cartProducts,
     handleAddProductToCart,
+    handleRemoveProductFromCart,
+    handleCartQuantityIncrease,
+    handleCartQuantityDecrease,
+    handleClearCart,
   };
   return <CartContext.Provider value={value} {...props} />;
 };

@@ -79,8 +79,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   }, []);
 
   useEffect(() => {
-    console.log("cartProducts 🟠 ", cartProducts);
-    console.log("product 🟢 ", product);
+    // console.log("cartProducts 🟠 ", cartProducts);
+    // console.log("product 🟢 ", product);
     setProductInCart(false);
     if (cartProducts && product) {
       const existingIndex = cartProducts.findIndex(
@@ -134,13 +134,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                 onClick={() => {
                   router.push("/cart");
                 }}
-              />
-              <Button
-                label="delete local storage"
-                onClick={() => {
-                  localStorage.removeItem(LOCAL_STORAGE_CARTITEMS);
-                  setProductInCart(false);
-                }} // dev only do not send to production
               />
             </div>
           </>
