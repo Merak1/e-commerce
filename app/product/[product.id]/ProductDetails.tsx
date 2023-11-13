@@ -79,8 +79,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   }, []);
 
   useEffect(() => {
-    // console.log("cartProducts 🟠 ", cartProducts);
-    // console.log("product 🟢 ", product);
     setProductInCart(false);
     if (cartProducts && product) {
       const existingIndex = cartProducts.findIndex(
@@ -161,26 +159,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             </div>
           </>
         )}
-        {/* <SetColor
-          images={product.images}
-          cartProduct={cartProduct}
-          handleColorSelect={handleColorSelect}
-        />
-        <Horizontal length={30} />
-        <SetQuantity
-          cartProduct={cartProduct}
-          handleQtyIncrease={handleQtyIncrease}
-          handleQtyDecrease={handleQtyDecrease}
-        />
-        <Horizontal length={30} />
-        <div className="max-w-[300px]">
-          <Button
-            label="Add to cart"
-            onClick={() => {
-              handleAddProductToCart(cartProduct);
-            }}
-          />
-        </div> */}
       </div>
     </div>
   );

@@ -1,50 +1,37 @@
+"use client";
 import Container from "@/app/components/Container";
-import { product } from "@/utils/product";
+// import { product } from "@/utils/product";
+import { products } from "@/utils/products";
 import ProductDetails from "./ProductDetails";
 import ListRating from "../ListRating";
-import moment from "moment";
-import { Rating } from "@mui/material";
-import { Horizontal } from "@/app/components/Horizontal";
-import Avatar from "@/app/components/products/Avatar";
+import { useEffect, useState } from "react";
 
-interface Iparams {
-  productId?: string;
+interface Iprams {
+  productId?: any;
 }
-const Product = ({ params }: { params: Iparams }) => {
-  return (
-    <div>
-      <Container>
-        <ProductDetails product={product} />
-        <div className="flex flex-col mt-20 gap-4 ">
-          <div>Add rating</div>
-          <ListRating product={product} />
-          <div className="text-small mt-2 ">
-            {product.reviews &&
-              product.reviews.map((review) => {
-                return (
-                  <div key={review.id} className="max-w-[300px]">
-                    <div className="flex gap-2 items-center">
-                      <Avatar src={review.user.image} />
-                      <div className="font-semibold"> {review?.user.name} </div>
-                      <div className="font-light">
-                        {moment(review.createdDate).fromNow()}{" "}
-                      </div>
-                    </div>
+const Product = ({ params }: { params: Iprams }) => {
+  const [product, setProduct] = useState<any>(null);
 
-                    <div className="mt-2">
-                      <Rating value={review.rating} readOnly />
-                      <div className="ml-2">{review.comment}</div>
-                    </div>
+  let productId = Object.values(params)[0];
 
-                    <Horizontal length={100} />
-                  </div>
-                );
-              })}
+  useEffect(() => {
+    setProduct(products.find((item: any) => item.id === productId));
+  }, [product]);
+
+  if (product) {
+    return (
+      <div>
+        {}
+        <Container>
+          <ProductDetails product={product} />
+          <div className="flex flex-col mt-20 gap-4 ">
+            <div>Add rating</div>
+            <ListRating product={product} />
           </div>
-        </div>
-      </Container>
-    </div>
-  );
+        </Container>
+      </div>
+    );
+  }
 };
 
 export default Product;
