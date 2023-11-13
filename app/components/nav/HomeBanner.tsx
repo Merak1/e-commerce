@@ -19,12 +19,13 @@ const HomeBanner = () => {
           </p>
         </div>
         <div className="w-1/3 relative aspect-video">
-          <Image
-            src="/watame.png"
+          {/* <Image
+            // src="/watame.png"
+            src="/watame2.jpg"
             alt="Banner Image"
             fill
             className="object-contain"
-          />
+          /> */}
         </div>
       </div>
     </div>
