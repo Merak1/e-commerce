@@ -1,6 +1,5 @@
 import { CartProductType } from "@/app/product/[product.id]/ProductDetails";
 import { maxItemsQuantity, minItemsQuantity } from "@/utils/constants";
-import { formatPrice } from "@/utils/formatPrice";
 import {
   createContext,
   useCallback,
