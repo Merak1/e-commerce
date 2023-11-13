@@ -1,10 +1,12 @@
 import { CartProductType } from "@/app/product/[product.id]/ProductDetails";
 import { maxItemsQuantity, minItemsQuantity } from "@/utils/constants";
+import { formatPrice } from "@/utils/formatPrice";
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { toast } from "react-hot-toast";
@@ -12,6 +14,7 @@ import { toast } from "react-hot-toast";
 export const LOCAL_STORAGE_CARTITEMS = "eshopCart";
 type CartContextType = {
   cartTotalQuantity: number;
+  cartTotalAmount: number;
   cartProducts: CartProductType[] | null;
   handleAddProductToCart: (product: CartProductType) => void;
   handleRemoveProductFromCart: (product: CartProductType) => void;
@@ -27,9 +30,33 @@ interface Props {
 }
 export const CartContextProvider = (props: Props) => {
   const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
+  const [cartTotalAmount, setCartTotalAmount] = useState(0);
   const [cartProducts, setCartProducts] = useState<CartProductType[] | null>(
     null
   );
+
+  // useEffect(() => {
+  //   console.log("cartTotalQuantity 1️⃣ ", cartTotalQuantity);
+  //   console.log("cartTotalAmount 2️⃣", cartTotalAmount);
+  // }, [cartTotalQuantity, cartTotalAmount]);
+
+  //TODO Debounce this functionality
+  useEffect(() => {
+    if (cartProducts) {
+      let totalProductQuantities = 0;
+      let totalPriceOfOrder = 0;
+      cartProducts?.forEach((element) => {
+        const { quantity, price } = element;
+        const priceByQuantities = quantity * price;
+
+        totalProductQuantities += quantity;
+        totalPriceOfOrder += priceByQuantities;
+      });
+
+      setCartTotalQuantity(totalProductQuantities);
+      setCartTotalAmount(totalPriceOfOrder);
+    }
+  }, [cartProducts]);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -41,14 +68,9 @@ export const CartContextProvider = (props: Props) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   console.log("cartProducts from userCart hook", cartProducts);
-  // }, [cartProducts]);
-
   const handleAddProductToCart = useCallback(
     (product: CartProductType) => {
       setCartProducts((prev) => {
-        // console.log("prev ", prev);
         let updatedCart;
 
         if (prev) {
@@ -155,7 +177,8 @@ export const CartContextProvider = (props: Props) => {
   }, [cartProducts]);
 
   const value = {
-    cartTotalQuantity: 0,
+    cartTotalQuantity,
+    cartTotalAmount,
     cartProducts,
     handleAddProductToCart,
     handleRemoveProductFromCart,
