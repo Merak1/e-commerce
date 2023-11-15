@@ -18,7 +18,6 @@ export default function Home() {
             {products.map((product: any) => {
               return <ProductCard data={product} />;
             })}
-            {/* rtestasdasd */}
           </div>
         </div>
       </Container>
