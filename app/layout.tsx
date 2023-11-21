@@ -20,8 +20,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const currentUser = await getCurrentUser();
-  console.log("currentUser 🔴", currentUser);
   return (
     <html lang="en">
       <body className={`${poppins.className} text-slate-700`}>
@@ -37,6 +35,7 @@ export default async function RootLayout({
         <CartProvider>
           <div className="flex flex-col min-h-screen ">
             <NavBar />
+            {/* <NavBar /> */}
             <main className="flex-grow ">{children}</main>
             <Footer />
           </div>
