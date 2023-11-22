@@ -1,18 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../components/Heading";
 import Input from "../components/inputs/input";
 import { useForm, FieldValues, SubmitHandler, Field } from "react-hook-form";
 import Button from "../components/Button";
 import Link from "next/link";
-import { AiOutlineAccountBook, AiOutlineGoogle } from "react-icons/ai";
+import { AiOutlineGoogle } from "react-icons/ai";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { SafeUser } from "@/types";
+interface LoginFormProps {
+  currentUser: SafeUser | null;
+}
 
-const LoginForm = () => {
+const LoginForm: React.FC<LoginFormProps> = ({ currentUser }) => {
   const router = useRouter();
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push("/");
+      router.refresh();
+    }
+  }, []);
+
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
@@ -45,6 +57,19 @@ const LoginForm = () => {
       }
     });
   };
+
+  if (currentUser) {
+    return (
+      <>
+        <div className="text-center">
+          <p>Logged in.. </p>
+
+          <hr />
+          <p>Redirecting...</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

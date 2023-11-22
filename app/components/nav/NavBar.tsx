@@ -3,7 +3,6 @@ import Container from "../Container";
 import { Redressed } from "next/font/google";
 import CartCount from "./CartCount";
 import UserMenu from "./UserMenu";
-import { SafeUser } from "@/types";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 
 const redressed = Redressed({ subsets: ["latin"], weight: ["400"] });

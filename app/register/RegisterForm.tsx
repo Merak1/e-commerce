@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, FieldValues, SubmitHandler, Field } from "react-hook-form";
 import Link from "next/link";
 import { AiOutlineAccountBook, AiOutlineGoogle } from "react-icons/ai";
@@ -12,9 +12,19 @@ import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
-
-const RegisterForm = () => {
+import { SafeUser } from "@/types";
+interface RegisterFormProps {
+  currentUser: SafeUser | null;
+}
+const RegisterForm: React.FC<RegisterFormProps> = ({ currentUser }) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     router.push("/");
+  //     router.refresh();
+  //   }
+  // }, []);
   const {
     register,
     handleSubmit,
@@ -26,8 +36,6 @@ const RegisterForm = () => {
       password: "",
     },
   });
-
-  const router = useRouter();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data: FieldValues) => {
     setIsLoading(true);
@@ -59,6 +67,18 @@ const RegisterForm = () => {
 
     setIsLoading(false);
   };
+  if (currentUser) {
+    return (
+      <>
+        <div className="text-center">
+          <p className="mb-4 text-lg tracking-wider ">Logged in.. </p>
+
+          <hr />
+          <p className="mt-4 text-slate-700">Redirecting...</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
