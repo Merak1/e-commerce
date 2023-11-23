@@ -74,12 +74,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ currentUser }) => {
   return (
     <>
       <Heading title="Log in" />
-      <Button
+      {/* <Button
         label="Continue with Google"
         outline
         icon={AiOutlineGoogle}
         onClick={handleSubmit(onSubmit)}
-      />
+      /> */}
       <hr className="bg-slate-300 w-full h-px" />
 
       <Input

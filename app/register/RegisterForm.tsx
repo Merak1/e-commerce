@@ -83,12 +83,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ currentUser }) => {
   return (
     <>
       <Heading title="Sing up for E-shop" />
-      <Button
+      {/* <Button
         label="Sign up with Google"
         outline
         icon={AiOutlineGoogle}
         onClick={handleSubmit(onSubmit)}
-      />
+      /> */}
       <hr className="bg-slate-300 w-full h-px" />
       <Input
         id="name"
