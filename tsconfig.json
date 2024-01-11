@@ -29,6 +29,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "pages/api/mercadoPago/checkout.js"
+    // , "app/cart/CartClient.jsx"
   ],
   "exclude": ["node_modules"]
 }
