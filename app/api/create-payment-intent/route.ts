@@ -4,6 +4,7 @@ import primsa from "@/libs/prismadb";
 import { NextResponse } from "next/server";
 import { CartProductType } from "@/app/product/[product.id]/ProductDetails";
 import { getCurrentUser } from "@/actions/getCurrentUser";
+import { rountToTwoDecimals } from "@/utils/roundToTwoDecimals";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2023-10-16",
@@ -14,10 +15,8 @@ const calculateOrderAmount = (items: CartProductType[]) => {
     const itemTotal = item.price * item.quantity;
     return acc + itemTotal;
   }, 0);
-  // const finalPrice = Number(totalPrice.toFixed(2));
-  // const finalPrice = Math.floor(totalPrice);
-  // return finalPrice;
-  return totalPrice;
+  const formatedPrice = rountToTwoDecimals(totalPrice);
+  return formatedPrice;
 };
 
 export async function POST(request: Request) {
@@ -32,14 +31,18 @@ export async function POST(request: Request) {
 
   console.log("items ", items);
   console.log("payment_intent_id ", payment_intent_id);
+  console.log(
+    "total before converting to cents  ",
+    calculateOrderAmount(items)
+  );
 
-  const total = calculateOrderAmount(items) * 100; // stripe takes payment in cents ????
+  const total = Math.round(calculateOrderAmount(items) * 100); // stripe takes payment in cents ????
 
   console.log("total 😀 ", total);
   const orderData = {
     user: { connect: { id: currentUser.id } },
     amount: total,
-    currency: "usd", // pesos mexicanos
+    currency: "mxn", // pesos mexicanos
     status: "pending",
     deliveryStatus: "pending",
     paymentIntentId: payment_intent_id,
