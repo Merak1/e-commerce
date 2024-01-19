@@ -9,8 +9,13 @@ import Button from "../components/Button";
 import ItemContent from "./ItemContent";
 import { formatPrice } from "@/utils/formatPrice";
 import { useRouter } from "next/navigation";
+import { SafeUser } from "@/types";
 
-const CartClient = () => {
+interface CartClient {
+  currentUser: SafeUser | null;
+}
+
+const CartClient: React.FC<CartClient> = ({ currentUser }) => {
   const { cartProducts, handleClearCart, cartTotalAmount } = useCart();
   const router = useRouter();
 
