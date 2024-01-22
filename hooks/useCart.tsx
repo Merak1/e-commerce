@@ -1,5 +1,6 @@
 import { CartProductType } from "@/app/product/[product.id]/ProductDetails";
 import { maxItemsQuantity, minItemsQuantity } from "@/utils/constants";
+import { rountToTwoDecimals } from "@/utils/roundToTwoDecimals";
 import {
   createContext,
   useCallback,
@@ -51,13 +52,18 @@ export const CartContextProvider = (props: Props) => {
       cartProducts?.forEach((element) => {
         const { quantity, price } = element;
         const priceByQuantities = quantity * price;
-
         totalProductQuantities += quantity;
         totalPriceOfOrder += priceByQuantities;
       });
 
+      let formatedPrice = rountToTwoDecimals(totalPriceOfOrder);
+
+      console.log("totalPriceOfOrder 😃", totalPriceOfOrder);
+      console.log("totalPriceOfOrder 😃 type😃 ", typeof totalPriceOfOrder);
+      console.log("formatedPrice 💜", formatedPrice);
+      console.log("formatedPrice 💜typeof💜", typeof formatedPrice);
       setCartTotalQuantity(totalProductQuantities);
-      setCartTotalAmount(totalPriceOfOrder);
+      setCartTotalAmount(formatedPrice);
     }
   }, [cartProducts]);
 
@@ -69,9 +75,13 @@ export const CartContextProvider = (props: Props) => {
 
       const eShopPaymentIntent: any =
         localStorage.getItem("eShopPaymentIntent");
-      const paymentIntent: any = JSON.parse(eShopPaymentIntent);
 
-      setPaymentIntent(paymentIntent);
+      const paymentIntent: any = JSON.parse(eShopPaymentIntent);
+      if (eShopPaymentIntent) {
+        console.log("🟣  eShopPaymentIntent exist 🟣 ");
+        console.log("🟣 paymentIntent 🟣 ", paymentIntent);
+        setPaymentIntent(paymentIntent);
+      }
 
       setCartProducts(cart);
     }

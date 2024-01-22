@@ -75,9 +75,10 @@ const CartClient: React.FC<CartClient> = ({ currentUser }) => {
             Taxes and shipping calculate at checkout
           </p>
           <Button
-            label="Checkout"
+            label={currentUser ? "Checkout" : "Login to Checkout"}
+            outline={currentUser ? false : true}
             onClick={() => {
-              router.push("/checkout");
+              currentUser ? router.push("/checkout") : router.push("/login");
             }}
           />
           <Link

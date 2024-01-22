@@ -88,6 +88,7 @@ const CheckoutClient = () => {
             <CheckoutForm
               clientSecret={clientSecret}
               handleSetPaymentSuccess={handleSetPaymentSuccess}
+              loading={loading}
             />
           </Elements>
         )}

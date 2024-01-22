@@ -89,7 +89,7 @@ export async function POST(request: Request) {
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: total,
-      currency: "usd", // change to mxn
+      currency: "mxn", // change to mxn
       automatic_payment_methods: { enabled: true },
     });
 
