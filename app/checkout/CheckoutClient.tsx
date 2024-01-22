@@ -43,11 +43,11 @@ const CheckoutClient = () => {
         .then((res) => {
           setLoading(false);
           if (res.status === 401) {
-            toast.error("💜🧡res status 401 💜🧡 request lacks authentication");
+            // toast.error("💜🧡res status 401 💜🧡 request lacks authentication");
             return router.push("/login");
           }
           if (res.status !== 200) {
-            toast.error("res status 💜🧡💜 = " + res.status);
+            // toast.error("res status 💜🧡💜 = " + res.status);
             return router.push("/login");
           }
 
@@ -66,8 +66,8 @@ const CheckoutClient = () => {
           toast.error(err);
         });
     }
-    console.log("paymentIntent 💜💙", paymentIntent);
-    console.log("cartProducts 💜", cartProducts);
+    // console.log("paymentIntent 💜💙", paymentIntent);
+    // console.log("cartProducts 💜", cartProducts);
   }, [cartProducts, paymentIntent]);
 
   const options: StripeElementsOptions = {
