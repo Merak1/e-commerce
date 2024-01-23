@@ -11,60 +11,61 @@ import {
 const Footer = () => {
   return (
     <footer
-      className="bg-slate-700
-    text-slate-200 text-sm mt-16"
+      className="
+     text-base mt-16
+     "
     >
       <Container>
         <div
-          className="flex flex-col md:flex-row
-          justify-between pt-16 bp-8 "
+          className="flex flex-col md:flex-row 
+           border-y border-gray-600
+          justify-evenly my-8 py-8 bp-8 "
         >
-          <FooterList>
-            <h3 className="text-base font-bold mb-2">Shop Categories</h3>
-            <Link href="#">Phones</Link>
-            <Link href="#">Laptops</Link>
-            <Link href="#">Desktops</Link>
-            <Link href="#">Watches</Link>
-            <Link href="#">TVs</Link>
-            <Link href="#">Accesories</Link>
-          </FooterList>
-          <FooterList>
-            <h3 className="text-base font-bold mb-2"> Customer Service</h3>
-            <Link href="#">Contact Us</Link>
-            <Link href="#">Shipping Policy</Link>
-            <Link href="#">Returns & Exchanges</Link>
-            <Link href="#"></Link>
-            <Link href="#">FAQS</Link>
-          </FooterList>
-          <div className="w-full md:w-1/3 mb-6">
-            <h3 className="text-base font-bold mb-2">About us </h3>
-            <p className="mb-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptatem, quasi.Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Voluptatem, quasi.Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Voluptatem, quasi.
-            </p>
-            <p>
-              &copy; {new Date().getFullYear()} E~shop. All rights reserved{" "}
-            </p>
+          <div
+            className="leading-loose w-full md:w-3/5
+            border-b md:border-b-0
+           md:border-r md:border-gray-900 md:mb-0
+           border-gray-800
+           pb-6 px-5 "
+          >
+            <h3 className="text-jrl font-bold text-xl">Contacto:</h3>
+            <p>Teléfono: 55 5196 3701</p>
+            <p>Horario: L-V 10:00hrs a 18:00hrs y Sábado 10:00hrs a 14:00hrs</p>
+            <p>Correo para Cotizaciones: cotizacion@jrlmarket.com</p>
+            <p>Correo para Facturas: facturacion@jrlmarket.com</p>
           </div>
-          <FooterList>
-            <h3 className="text-base font-bold mb-2">Follow us </h3>
-            <div className="flex gap-2">
+
+          <div
+            className="w-full md:w-2/5 px-5 mx-auto text-center
+           pt-6 md:pt-0 "
+          >
+            <h3 className="text-jrl font-bold text-xl ">Redes Sociales: </h3>
+            <div className="flex gap-2 justify-center mt-5">
               <Link href="#">
-                <AiFillTwitterCircle size={24} />
+                <AiFillTwitterCircle size={50} />
               </Link>
               <Link href="#">
-                <MdFacebook size={24} />
+                <MdFacebook size={50} />
               </Link>
               <Link href="#">
-                <AiFillInstagram size={24} />
-              </Link>
-              <Link href="#">
-                <AiFillYoutube size={24} />
+                <AiFillInstagram size={50} />
               </Link>
             </div>
-          </FooterList>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-evenly py-8 ">
+          <div className="w-full  md:w-3/5">
+            <p>
+              © 2023 Marca Registrada. Empresa 100% Méxicana. Derechos
+              Reservados.
+            </p>
+          </div>
+
+          <div className="w-full  md:w-2/5 flex flex-row justify-evenly pt-5 md:pt-0">
+            <p>Terminos y Condiciones</p>
+            <p>Aviso de Privacidad</p>
+          </div>
         </div>
       </Container>
     </footer>
