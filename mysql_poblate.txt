@@ -1,0 +1,80 @@
+INSERT  INTO  entry   (user, title ,content) VALUES ("John Mansjter", "A song I like", "Im gonna put some boogie in your ear Shake and bop, dont you stop
+Dance like a maniac until you drop
+I dont mind, I dont mind
+I can run a razor right up your spine
+What are you waiting for?
+What do you think you were created for?
+Show us, you care, show us you dare
+You dont know what happened if you werent there
+Born to raise hell, born to raise hell
+We know how to do it and we do it real well
+Born to raise hell, born to raise hell
+Voodoo medicine, cast my spell
+Born to raise hell, born to raise hell
+Play that guitar just like ringin a bell
+Take it or leave it
+Going for broke, rock til you choke
+It dont matter if you drink or smoke
+Speak through the beat, get up on your feet
+Sweating like a hound dog, white as a sheet"),
+
+("Rob Stuart", "Do Ya Think I'm Sexy Lyrics" , "Advisory - the following lyrics contain explicit language:
+
+Sugar, sugar
+She sits alone waiting for suggestions
+
+He's so nervous, avoiding all the questions
+
+His lips are dry, her heart is gently pounding
+
+Don't you just know exactly what they're thinking
+If you want my body and you think I'm sexy
+
+Come on, sugar, let me know
+
+If you really need me, just reach out and touch me
+
+Come on, honey, tell me so, tell me so, baby
+He's acting shy, looking for an answer
+
+Come on honey, let's spend the night together
+
+Now hold on a minute before we go much further
+
+Give me a dime so I can phone my mother
+They catch a cab to his high rise apartment
+
+At last he can tell her exactly what his heart meant 
+ 
+ 
+If you want my body and you think I'm sexy"),
+("Bob Marley", "I shot The Sherriff","
+I shot the sheriff
+
+But I didn't shoot no deputy, oh no! Oh!
+
+I shot the sheriff
+
+But I didn't shoot no deputy, ooh, ooh, oo-ooh.)
+Yeah! All around in my home town
+
+They're tryin' to track me down
+
+They say they want to bring me in guilty
+
+For the killing of a deputy
+
+For the life of a deputy.
+But I say:
+
+Oh, now, now. Oh!
+
+(I shot the sheriff.) - the sheriff.
+
+(But I swear it was in selfdefence.)
+
+Oh, no! (Ooh, ooh, oo-oh) Yeah!
+
+I say: I shot the sheriff - Oh, Lord!" )
+
+;
