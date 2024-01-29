@@ -1,34 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Examen programador React
 
-## Getting Started
 
-First, run the development server:
+###  una aplicación en React que posea un conjunto reducido de
+características propias de un Blog de Internet.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Pasos para poder instalar y correr de manera local
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Para poder correr localmente el proyecto se necesita previamente tener isntalado MYSQL -
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+se inicia el servicio de mysql 
+`service mysql start`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Se entra a mysql con el siguiente comando 
 
-## Learn More
+`mysql -u root -pPASSWORD;` reemplazando PASSWORD con la contraseña
 
-To learn more about Next.js, take a look at the following resources:
+Se crea una nueva DB con el nombre "wooBlog" sin comillas
+`CREATE DATABASE wooBlog;`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Se entra a la Base de Datos
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+`USE wooBlog;`
 
-## Deploy on Vercel
+La primera vez se tiene que crear la tabla que usa la applicación llamada "entry"
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`CREATE TABLE entry ( id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY , user VARCHAR(50) NOT NULL, title VARCHAR(100) NOT NULL, content TEXT NOT NULL, createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP );`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Se pobla por primera vez la tabla con el siguiente [comando](mysql_poblate.txt)  : en la misma consola de mysql 
+
+## Para descargar el proyecto :
+
+Descargar el repositorio y en el directorio  instalar todas las dependencias con 
+`npm install `
+
+Correr `npm run dev `
+
+El proyecto  se encuentra en : 
+ [http://localhost:3000](http://localhost:3000) 
+
+Muchas consideraciones aparte, me apegué exclusivamente a lo que delimitaba la descripción del proyecto aún que existan los endpoints para las demas acciónes restful  para actualizar eliminar y entradas individuales.
+
+De la misma forma la funcionalidad extra quedó muy cercana pero por cuestión de tiempos en el fin de semana se quedó en una implementación para el futúro.
+
+De la misma manera quedé a pocos pasos de poder completamente deployar una versión en vivo a Vercel pero la falta de tiempo me lo impidió.
