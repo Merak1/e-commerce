@@ -23,7 +23,7 @@ const Input: React.FC<InputProps> = ({
   errors,
 }) => {
   return (
-    <div className="w-full relative ">
+    <div className="w-full relative mt-3">
       <input
         autoComplete="off"
         id={id}
