@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Heading from "../components/Heading";
-import Input from "../components/inputs/input";
+import Input from "../components/inputs/Input";
 import { useForm, FieldValues, SubmitHandler, Field } from "react-hook-form";
 import Button from "../components/Button";
 import Link from "next/link";
@@ -74,12 +74,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ currentUser }) => {
   return (
     <>
       <Heading title="Log in" />
-      {/* <Button
-        label="Continue with Google"
-        outline
-        icon={AiOutlineGoogle}
-        onClick={handleSubmit(onSubmit)}
-      /> */}
       <hr className="bg-slate-300 w-full h-px" />
 
       <Input
