@@ -3,10 +3,9 @@
 import { useEffect, useState } from "react";
 import { useForm, FieldValues, SubmitHandler, Field } from "react-hook-form";
 import Link from "next/link";
-import { AiOutlineAccountBook, AiOutlineGoogle } from "react-icons/ai";
 import Heading from "../components/Heading";
 import Button from "../components/Button";
-import Input from "../components/inputs/input";
+import Input from "../components/inputs/Input";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
@@ -83,12 +82,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ currentUser }) => {
   return (
     <>
       <Heading title="Sing up for E-shop" />
-      {/* <Button
-        label="Sign up with Google"
-        outline
-        icon={AiOutlineGoogle}
-        onClick={handleSubmit(onSubmit)}
-      /> */}
       <hr className="bg-slate-300 w-full h-px" />
       <Input
         id="name"
