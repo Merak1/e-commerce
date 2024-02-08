@@ -2,10 +2,12 @@
 import ActionBtn from "@/app/components/ActionBtn";
 import Heading from "@/app/components/Heading";
 import Status from "@/app/components/Status";
+import FirebaseApp from "@/libs/firebase";
 import { formatPrice } from "@/utils/formatPrice";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Product } from "@prisma/client";
 import axios from "axios";
+import { deleteObject, getStorage, ref } from "firebase/storage";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
@@ -25,11 +27,11 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   products,
 }) => {
   const router = useRouter();
+  const storage = getStorage(FirebaseApp);
   let rows: any = [];
-  console.log("there is no products from manageProductsClient", products);
+  // console.log("there is no products from manageProductsClient", products);
 
   if (products) {
-    console.log("there is products");
     rows = products.map((product) => {
       return {
         id: product.id,
@@ -92,11 +94,23 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
       headerName: "Actions",
       width: 200,
       renderCell: (params) => {
+        const { id, inStock, images } = params.row;
         return (
           <div className="flex justify-between gap-4">
-            <ActionBtn icon={MdCached} onClick={() => {}} />
-            <ActionBtn icon={MdDelete} onClick={() => {}} />
-            <ActionBtn icon={MdRemoveRedEye} onClick={() => {}} />
+            <ActionBtn
+              icon={MdCached}
+              onClick={() => handleToggleStock(id, inStock)}
+            />
+            <ActionBtn
+              icon={MdDelete}
+              onClick={() => handleDelete(id, images)}
+            />
+            <ActionBtn
+              icon={MdRemoveRedEye}
+              onClick={() => {
+                router.push(`product/${id}`);
+              }}
+            />
           </div>
         );
       },
@@ -116,6 +130,38 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
       })
       .catch((error) => {
         toast.error("Oops! Something went wrong");
+        console.log(error);
+      });
+  }, []);
+
+  const handleDelete = useCallback(async (id: string, images: any[]) => {
+    toast("Deleting product, please wait...");
+
+    const handleImageDelete = async () => {
+      try {
+        for (const item of images) {
+          if (item.image) {
+            const imageRef = ref(storage, item.image);
+            await deleteObject(imageRef);
+
+            console.log("image deleeted, ", item.image);
+          }
+        }
+      } catch (error) {
+        return console.log("Deleting images error: " + error);
+      }
+    };
+
+    await handleImageDelete();
+
+    axios
+      .delete(`/api/product/${id}`)
+      .then((response) => {
+        toast.success("Product Deleted ");
+        router.refresh();
+      })
+      .catch((error) => {
+        toast.error("Oops! Failed to delete product");
         console.log(error);
       });
   }, []);

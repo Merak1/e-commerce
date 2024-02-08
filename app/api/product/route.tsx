@@ -54,3 +54,18 @@ export async function POST(request: Request) {
 
   return NextResponse.json(product);
 }
+
+export async function PUT(request: Request) {
+  const currentUser = await getCurrentUser();
+
+  const body = await request.json();
+
+  const { id, inStock } = body;
+
+  const product = await prisma.product.update({
+    where: { id: id },
+    data: { inStock },
+  });
+
+  return NextResponse.json(product);
+}
