@@ -19,7 +19,6 @@ export default async function getProducts(params: IProductParams) {
     if (category) {
       query.category = category;
     }
-    // console.log("query in getproducts 🎪", query);
     const products = await prisma.product.findMany({
       where: {
         ...query,
