@@ -136,7 +136,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
             <ActionBtn
               icon={MdRemoveRedEye}
               onClick={() => {
-                router.push(`order/${id}`);
+                router.push(`/order/${id}`);
               }}
             />
           </div>
