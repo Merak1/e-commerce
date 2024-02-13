@@ -62,8 +62,6 @@ model Product {
   images Image[]
   sku String
   model String
-  createdAt DateTime @default(now())
-  updatedAt  DateTime @updatedAt
   
   sales Sale[]
 }
