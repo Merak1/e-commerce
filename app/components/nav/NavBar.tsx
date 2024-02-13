@@ -95,8 +95,15 @@ const NavBar = async () => {
             </div>
             |
             <div className="mx-5 flex items-center ">
+              <Link href="/categories" className="flex items-center">
+                <IoIosStar />
+                Categorias
+              </Link>
+            </div>
+            |
+            <div className="mx-5 flex items-center ">
               <FaLocationDot />
-              Estatus de mi Pedido
+              Productos
             </div>
             |
           </div>

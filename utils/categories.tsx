@@ -16,7 +16,41 @@ import {
   TbNumber9Small,
 } from "react-icons/tb";
 
-export const categories = {
+const CÁMARA_METALICA_COLORES = "cámara metalica colores";
+const TRANSPARENTE_ESQUINA_COLOR = "transparente esquina color";
+const NEGRAS_CON_TEXTURA = "negras con textura";
+const MAGSAFE = "magsafe";
+const GRADOS_360 = "360 grados";
+const EJECUTIVAS_COLORES = "ejecutivas colores";
+const PROTECTOR_CÁ_MARA_PASTEL = "protector cámara pastel";
+const CORREA = "correa";
+const MATE = "mate";
+const NEON = "neón";
+const PROTECTORES_DE_CAMARA = "protectores de camara";
+const ACRIGEL = "acrigel";
+const SUBLIMAR = "sublimar";
+const AIRPODS = "airpods";
+const SUBLIMAR_TRANSPARENTE = "sublimar transparente";
+
+export const categories = [
+  CÁMARA_METALICA_COLORES,
+  TRANSPARENTE_ESQUINA_COLOR,
+  NEGRAS_CON_TEXTURA,
+  MAGSAFE,
+  GRADOS_360,
+  EJECUTIVAS_COLORES,
+  PROTECTOR_CÁ_MARA_PASTEL,
+  CORREA,
+  MATE,
+  NEON,
+  PROTECTORES_DE_CAMARA,
+  ACRIGEL,
+  SUBLIMAR,
+  AIRPODS,
+  SUBLIMAR_TRANSPARENTE,
+];
+
+export const categories1 = {
   CÁMARA_METALICA_COLORES: "cámara metalica colores",
   TRANSPARENTE_ESQUINA_COLOR: "transparente esquina color",
   NEGRAS_CON_TEXTURA: "negras con textura",
@@ -33,6 +67,24 @@ export const categories = {
   AIRPODS: "airpods",
   SUBLIMAR_TRANSPARENTE: "sublimar transparente",
 };
+
+// export const categories = [
+//   ["CÁMARA_METALICA_COLORES", "cámara metalica colores"],
+//   ["TRANSPARENTE_ESQUINA_COLOR", "transparente esquina color"],
+//   ["NEGRAS_CON_TEXTURA", "negras con textura"],
+//   ["MAGSAFE", "magsafe"],
+//   ["GRADOS_360", "360 grados"],
+//   ["EJECUTIVAS_COLORES", "ejecutivas colores"],
+//   ["PROTECTOR_CÁ_MARA_PASTEL", "protector cámara pastel"],
+//   ["CORREA", "correa"],
+//   ["MATE", "mate"],
+//   ["NEON", "neón"],
+//   ["PROTECTORES_DE_CAMARA", "protectores de camara"],
+//   ["ACRIGEL", "acrigel"],
+//   ["SUBLIMAR", "sublimar"],
+//   ["AIRPODS", "airpods"],
+//   ["SUBLIMAR_TRANSPARENTE", "sublimar transparente"],
+// ];
 
 export const categoryButtons = [
   {
