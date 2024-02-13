@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { SafeUser } from "@/types";
 interface LoginFormProps {
-  currentUser: SafeUser | null;
+  currentUser: SafeUser | null | any;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ currentUser }) => {
