@@ -3,9 +3,8 @@
 import Image from "next/image";
 import { truncateText } from "@/utils/truncateText";
 import { formatPrice } from "@/utils/formatPrice";
-import { Rating } from "@mui/material";
+// import { Rating } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { productRating } from "@/utils/productRating";
 
 interface ProductCardProps {
   data: any;
@@ -13,7 +12,10 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
   const router = useRouter();
-  const rating = productRating(data);
+  if (!data) {
+    <div className="">No data</div>;
+  }
+
   return (
     <div
       className="col-span-1  cursor-pointer  border-slate-200 bg-slate-50 rounder-sm p-2 transition hover:scale-105 text-center text-sm border-[1.2px]"
@@ -31,10 +33,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
         <div className="mt-4">
           <p> {truncateText(data.name)} </p>
         </div>
-        <div>
+        {/* <div>
           <Rating value={rating} readOnly />
         </div>
-        <div>{data.reviews.length} reviews</div>
+        <div>{data.reviews.length} reviews</div> */}
         <div className="font-semibold">{formatPrice(data.price)}</div>
       </div>
     </div>

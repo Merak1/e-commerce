@@ -1,8 +1,8 @@
 "use client";
 
 import SetColor from "@/app/components/products/SetColor";
-import { productRating } from "@/utils/productRating";
-import { Rating } from "@mui/material";
+// import { productRating } from "@/utils/productRating";
+// import { Rating } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import SetQuantity from "@/app/components/products/SetQuantity";
 import Button from "@/app/components/Button";
@@ -37,7 +37,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const router = useRouter();
   const { cartTotalQuantity, cartProducts, handleAddProductToCart } = useCart();
   const [isProductInCart, setProductInCart] = useState(false);
-  const rating = productRating(product);
+  // const rating = productRating(product);
   const [cartProduct, setCartProduct] = useState<CartProductType>({
     id: product.id,
     name: product.name,
@@ -91,6 +91,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     }
   }, [cartProducts]);
 
+  if (!product) {
+    return <></>;
+  }
   return (
     <div className="grid grid-cols-1  md:grid-cols-2 gap-12 mt-6">
       <ProductImage
@@ -101,8 +104,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       <div className="flex flex-col text-slate-500 text-sm">
         <h2 className="text-3xl font-medium text-slate-700">{product.name} </h2>
         <div className="flex items-center gap-2">
-          <Rating value={rating} readOnly />
-          <div>{product.reviews.length} reviews</div>
+          {/* <Rating value={rating} readOnly /> */}
+          {/* <div>{product.reviews.length} reviews</div> */}
         </div>
         <Horizontal length={30} />
         <div className="text-justify">{product.description}</div>

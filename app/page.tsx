@@ -1,10 +1,23 @@
-import { products } from "@/utils/products";
+// import { products } from "@/utils/products";
 import Container from "./components/Container";
 import HomeBanner from "./components/nav/HomeBanner";
 import { truncateText } from "@/utils/truncateText";
 import ProductCard from "./components/products/productCard";
+import getProducts, { IProductParams } from "@/actions/getProducts";
+import React from "react";
+import NullData from "./components/NullData";
 
-export default function Home() {
+interface HomeProps {
+  searchParams: IProductParams;
+}
+
+export default async function Home({ searchParams }: HomeProps) {
+  const products = await getProducts(searchParams);
+
+  if (products.length === 0) {
+    return <NullData title="no products found" />;
+  }
+
   return (
     <div className="p-8">
       <Container>
@@ -16,10 +29,6 @@ export default function Home() {
               2xl:grid-cols-6 gap-8"
           >
             {products.map((product: any) => {
-              // return <ProductCard data={product} />;
-
-              // return <p>hola</p>;
-
               return (
                 <div key={product.id}>
                   <ProductCard data={product} />
