@@ -75,10 +75,6 @@ const AddProductForm = () => {
     }
   }, [isProductCreated]);
 
-  useEffect(() => {
-    console.log("imagesUrls 👹", imagesUrls);
-  }, [imagesUrls]);
-
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
       shouldValidate: true,
