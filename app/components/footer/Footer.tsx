@@ -11,13 +11,13 @@ const Footer = () => {
   return (
     <footer
       className="
-     text-base mt-16
+     text-base  bg-backgroundYellow 
      "
     >
       <Container>
         <div
           className="flex flex-col md:flex-row 
-           border-y border-gray-600
+            mt-16 border-y border-gray-600
           justify-evenly my-8 py-8 bp-8 "
         >
           <div

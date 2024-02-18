@@ -15,6 +15,7 @@ import { BiSolidOffer } from "react-icons/bi";
 import { IoIosStar } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { GiHamburgerMenu } from "react-icons/gi";
+import SearchBar from "../searchbar/SearchBar";
 
 const NavBar = async () => {
   const currentUser = await getCurrentUser();
@@ -73,8 +74,9 @@ const NavBar = async () => {
                 </Link>
               </div>
             </div>
-            {/* <div className="hidden md:block">Search</div> */}
-            <div className="">Search</div>
+            <div className="hidden md:block">
+              <SearchBar />
+            </div>
             <div className="flex justify-between gap-8 md:gap-12">
               <CartCount />
               <UserMenu currentUser={currentUser} />
