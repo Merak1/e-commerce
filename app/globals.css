@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.control-dots {
+    display: flex;
+    width: 100%;
+    margin: auto 0px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.slick-dots li.slick-active button:before {
+    color: #F0AE44 !important;
+
+}
+
+.custom-dots button {
+    color: #F0AE44 !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
