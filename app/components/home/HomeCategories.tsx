@@ -10,12 +10,12 @@ import {
 
 const HomeCategories = () => {
   const { height, width } = useWindowDimensions();
-  const [slidesToShow, setSlidesToShow] = useState(6);
+  const [slidesToShow, setSlidesToShow] = useState(8);
   const [dots, setDots] = useState(true);
   useEffect(() => {
     if (width) {
       if (width <= 1440) {
-        setSlidesToShow(6);
+        setSlidesToShow(8);
         setDots(true);
       }
       if (width <= 1024) {
@@ -26,7 +26,7 @@ const HomeCategories = () => {
         setSlidesToShow(4);
         setDots(true);
       }
-      if (width <= 425) {
+      if (width <= 525) {
         setDots(false);
         setSlidesToShow(2);
       }
