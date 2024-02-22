@@ -3,21 +3,24 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 
 export async function PUT(request: Request) {
-  const currentUser = await getCurrentUser();
+  try {
+    const currentUser = await getCurrentUser();
+    const body = await request.json();
+    if (currentUser) {
+      if (currentUser?.role !== "ADMIN") {
+        return NextResponse.error();
+      }
 
-  if (!currentUser) return NextResponse.error();
+      const { id, deliveryStatus } = body;
 
-  if (currentUser.role === "ADMIN") {
+      const order = await prisma.order.update({
+        where: { id: id },
+        data: { deliveryStatus },
+      });
+
+      return NextResponse.json(order);
+    }
+  } catch (err: any) {
     return NextResponse.error();
   }
-  const body = await request.json();
-
-  const { id, deliveryStatus } = body;
-
-  const order = await prisma.order.update({
-    where: { id: id },
-    data: { deliveryStatus },
-  });
-
-  return NextResponse.json(order);
 }
