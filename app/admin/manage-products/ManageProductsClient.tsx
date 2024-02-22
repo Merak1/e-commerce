@@ -47,13 +47,13 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   }
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 100 },
+    { field: "id", headerName: "ID", width: 230 },
     { field: "name", headerName: "Name", width: 160 },
     { field: "sku", headerName: "sku", width: 100 },
     {
       field: "price",
       headerName: "Price",
-      width: 120,
+      width: 100,
       renderCell: (params) => {
         return (
           <div className="font-bold text-slate-800">{params.row.price} </div>
@@ -65,7 +65,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
     {
       field: "inStock",
       headerName: "inStock",
-      width: 120,
+      width: 100,
       renderCell: (params) => {
         return (
           <div className="">

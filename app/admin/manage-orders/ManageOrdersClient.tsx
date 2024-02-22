@@ -30,9 +30,12 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
 
   if (orders) {
     rows = orders.map((order) => {
-      const { userId, amount, currency, status, deliveryStatus, user } = order;
+      console.log("orders: " + order);
+      console.log(order);
+      const { id, userId, amount, currency, status, deliveryStatus, user } =
+        order;
       return {
-        id: order.id,
+        id: id,
         userId: userId,
         amount: formatPrice(amount),
         currency: currency,
@@ -45,13 +48,13 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
   }
 
   const columns: GridColDef[] = [
-    { field: "userId", headerName: "Id", width: 140 },
+    { field: "id", headerName: "Id", width: 230 },
     { field: "userName", headerName: "User", width: 130 },
     { field: "userEmail", headerName: "Email", width: 160 },
     {
       field: "amount",
       headerName: "Amount",
-      width: 120,
+      width: 100,
       renderCell: (params) => {
         return (
           <div className="font-bold text-slate-800">{params.row.amount} </div>
@@ -125,7 +128,6 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
       width: 200,
       renderCell: (params) => {
         const { id } = params.row;
-        console.log("id from action cell ", id);
         return (
           <div className="flex justify-between gap-4">
             <ActionBtn
