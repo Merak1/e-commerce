@@ -102,7 +102,7 @@ const CheckoutClient = () => {
             <div className="max-w-[220px] w-full ">
               <Button
                 label="View your Orders"
-                onClick={() => router.push("/order")}
+                onClick={() => router.push("/orders")}
               />
             </div>
           </div>
