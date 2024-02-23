@@ -30,8 +30,6 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
 
   if (orders) {
     rows = orders.map((order) => {
-      console.log("orders: " + order);
-      console.log(order);
       const { id, userId, amount, currency, status, deliveryStatus, user } =
         order;
       return {
