@@ -23,6 +23,7 @@ type CartContextType = {
   handleClearCart: () => void;
   paymentIntent: string | null;
   handleSetPaymentIntent: (val: string | null) => void;
+  deletePaymentIntent: () => void;
 };
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -44,6 +45,17 @@ export const CartContextProvider = (props: Props) => {
   //   console.log("cartTotalAmount 2️⃣", cartTotalAmount);
   // }, [cartTotalQuantity, cartTotalAmount]);
 
+  const deletePaymentIntent = useCallback(() => {
+    setPaymentIntent("");
+
+    if (typeof window !== "undefined" && window.localStorage) {
+      // localStorage.getItem("eShopPaymentIntent");
+      localStorage.removeItem("eShopPaymentIntent");
+      // localStorage.setItem("eShopPaymentIntent", " ");
+    }
+
+    console.log("🟥 PAYMENT INTENT DELETED 🟥");
+  }, []);
   //TODO Debounce this functionality
   useEffect(() => {
     if (cartProducts) {
@@ -214,6 +226,7 @@ export const CartContextProvider = (props: Props) => {
     handleClearCart,
     paymentIntent,
     handleSetPaymentIntent,
+    deletePaymentIntent,
   };
   return <CartContext.Provider value={value} {...props} />;
 };
