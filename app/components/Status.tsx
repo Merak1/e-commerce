@@ -8,8 +8,12 @@ interface StatusProps {
 }
 const Status: React.FC<StatusProps> = ({ text, icon: Icon, bg, color }) => {
   return (
-    <div className={` ${bg} ${color}  px-1 rounded flex items-center gap-1 `}>
-      {text} <Icon size={15} />
+    <div className=" flex flex-col h-full mt-auto justify-center ">
+      <div
+        className={` ${bg} ${color} h-[25px]  px-1 rounded flex items-center gap-1 w-fit`}
+      >
+        {text} <Icon size={15} />
+      </div>
     </div>
   );
 };
