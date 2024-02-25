@@ -13,10 +13,9 @@ const ProductImagePreview: React.FC<ProductImagePreviewProps> = ({
       <div className="w-20 m-auto ">
         <div className="flex align-middle items-center justify-center">
           {product.images.map((image: any, index: number) => {
-            if (index === imageSelected) {
-            }
             return (
               <div
+                key={index}
                 className={`relative w-[40px] aspect-square  border-teal-400
                     ${
                       index === imageSelected
