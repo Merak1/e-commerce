@@ -24,10 +24,6 @@ const CheckoutClient = () => {
   useEffect(() => {
     // create a payment intent as soon as the page loads
 
-    console.log("payment intent  ", paymentIntent);
-    console.log("clientSecret", clientSecret);
-    console.log("cartProducts", cartProducts);
-
     if (cartProducts) {
       setLoading(true);
       setError(false);
@@ -43,15 +39,11 @@ const CheckoutClient = () => {
         .then((res) => {
           setLoading(false);
           if (res.status === 401) {
-            // toast.error("💜🧡res status 401 💜🧡 request lacks authentication");
             return router.push("/login");
           }
           if (res.status !== 200) {
-            // toast.error("res status 💜🧡💜 = " + res.status);
             return router.push("/login");
           }
-
-          // console.log("res.status 💜", res.status);
 
           return res.json();
         })
@@ -66,8 +58,6 @@ const CheckoutClient = () => {
           toast.error(err);
         });
     }
-    // console.log("paymentIntent 💜💙", paymentIntent);
-    // console.log("cartProducts 💜", cartProducts);
   }, [cartProducts, paymentIntent]);
 
   const options: StripeElementsOptions = {
