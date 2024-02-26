@@ -16,7 +16,12 @@ interface CartClient {
 }
 
 const CartClient: React.FC<CartClient> = ({ currentUser }) => {
-  const { cartProducts, handleClearCart, cartTotalAmount } = useCart();
+  const {
+    cartProducts,
+    handleClearCart,
+    cartTotalAmount,
+    deletePaymentIntent,
+  } = useCart();
   const router = useRouter();
 
   if (!cartProducts || cartProducts.length === 0) {
@@ -81,6 +86,13 @@ const CartClient: React.FC<CartClient> = ({ currentUser }) => {
               currentUser ? router.push("/checkout") : router.push("/login");
             }}
           />
+          {/* DELETE THIS ON RELEASE */}
+          {/* <button
+            className="text-slate-500 flex items-center gap-1 mt-2"
+            onClick={deletePaymentIntent}
+          >
+            delete payment intent
+          </button> */}
           <Link
             href={"/"}
             className="text-slate-500 flex items-center gap-1 mt-2"
