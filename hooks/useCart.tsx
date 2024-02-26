@@ -41,17 +41,16 @@ export const CartContextProvider = (props: Props) => {
   const [paymentIntent, setPaymentIntent] = useState<string | null>(null);
 
   // useEffect(() => {
-  //   console.log("cartTotalQuantity 1️⃣ ", cartTotalQuantity);
-  //   console.log("cartTotalAmount 2️⃣", cartTotalAmount);
-  // }, [cartTotalQuantity, cartTotalAmount]);
+  //   console.log("paymentIntent 1️⃣ ", paymentIntent);
+  // }, [paymentIntent]);
 
   const deletePaymentIntent = useCallback(() => {
-    setPaymentIntent("");
+    setPaymentIntent(null);
 
     if (typeof window !== "undefined" && window.localStorage) {
       // localStorage.getItem("eShopPaymentIntent");
-      localStorage.removeItem("eShopPaymentIntent");
-      // localStorage.setItem("eShopPaymentIntent", " ");
+      // localStorage.removeItem("eShopPaymentIntent");
+      localStorage.setItem("eShopPaymentIntent", "");
     }
 
     console.log("🟥 PAYMENT INTENT DELETED 🟥");
@@ -70,10 +69,10 @@ export const CartContextProvider = (props: Props) => {
 
       let formatedPrice = rountToTwoDecimals(totalPriceOfOrder);
 
-      console.log("totalPriceOfOrder 😃", totalPriceOfOrder);
-      console.log("totalPriceOfOrder 😃 type😃 ", typeof totalPriceOfOrder);
-      console.log("formatedPrice 💜", formatedPrice);
-      console.log("formatedPrice 💜typeof💜", typeof formatedPrice);
+      // console.log("totalPriceOfOrder 😃", totalPriceOfOrder);
+      // console.log("totalPriceOfOrder 😃 type😃 ", typeof totalPriceOfOrder);
+      // console.log("formatedPrice 💜", formatedPrice);
+      // console.log("formatedPrice 💜typeof💜", typeof formatedPrice);
       setCartTotalQuantity(totalProductQuantities);
       setCartTotalAmount(formatedPrice);
     }
@@ -88,11 +87,11 @@ export const CartContextProvider = (props: Props) => {
       const eShopPaymentIntent: any =
         localStorage.getItem("eShopPaymentIntent");
 
-      const paymentIntent: any = JSON.parse(eShopPaymentIntent);
-      if (eShopPaymentIntent) {
-        console.log("🟣  eShopPaymentIntent exist 🟣 ");
-        console.log("🟣 paymentIntent 🟣 ", paymentIntent);
-        setPaymentIntent(paymentIntent);
+      const localStoragePaymentIntent: any = JSON.parse(eShopPaymentIntent);
+      // console.log("localStoragePaymentIntent ", localStoragePaymentIntent);
+
+      if (typeof localStoragePaymentIntent === "string") {
+        setPaymentIntent(localStoragePaymentIntent);
       }
 
       setCartProducts(cart);
