@@ -10,7 +10,7 @@ import { Product } from "@prisma/client";
 import axios from "axios";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import {
   MdCached,
@@ -21,6 +21,8 @@ import {
   MdCreate,
 } from "react-icons/md";
 import { BiSolidDuplicate } from "react-icons/bi";
+import Modal from "@mui/material/Modal";
+import DuplicateProduct from "./DuplicateProduct";
 
 interface ManageProductsClientProps {
   products: Product[] | undefined;
@@ -31,6 +33,10 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
 }) => {
   const router = useRouter();
   const storage = getStorage(FirebaseApp);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   let rows: any = [];
 
   if (products) {
@@ -144,9 +150,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
             <ActionBtn
               icon={MdCreate}
               action={"edit product details"}
-              onClick={() => {
-                // router.push(`product/${id}`);
-              }}
+              onClick={() => handleOpen()}
             />
             <ActionBtn
               icon={BiSolidDuplicate}
@@ -215,6 +219,14 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
       <div className="mb-4 mt-8">
         <Heading title="Manage products" center />
       </div>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <DuplicateProduct />
+      </Modal>
       <div style={{ height: 600, width: "100%" }}>
         <DataGrid
           rows={rows}
