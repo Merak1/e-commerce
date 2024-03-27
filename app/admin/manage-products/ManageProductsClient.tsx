@@ -1,4 +1,5 @@
 "use client";
+import moment from "moment";
 import ActionBtn from "@/app/components/ActionBtn";
 import Heading from "@/app/components/Heading";
 import Status from "@/app/components/Status";
@@ -17,7 +18,9 @@ import {
   MdDelete,
   MdDone,
   MdRemoveRedEye,
+  MdCreate,
 } from "react-icons/md";
+import { BiSolidDuplicate } from "react-icons/bi";
 
 interface ManageProductsClientProps {
   products: Product[] | undefined;
@@ -29,27 +32,50 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   const router = useRouter();
   const storage = getStorage(FirebaseApp);
   let rows: any = [];
-  // console.log("there is no products from manageProductsClient", products);
 
   if (products) {
     rows = products.map((product) => {
+      const {
+        id,
+        name,
+        price,
+        category,
+        brand,
+        inStock,
+        images,
+        sku,
+        createDate,
+      } = product;
       return {
-        id: product.id,
-        name: product.name,
-        price: formatPrice(product.price),
-        category: product.category,
-        brand: product.brand,
-        inStock: product.inStock,
-        images: product.images,
-        sku: product.sku,
+        id: id,
+        name: name,
+        price: formatPrice(price),
+        category: category,
+        brand: brand,
+        inStock: inStock,
+        images: images,
+        sku: sku,
+        createDate: createDate,
       };
     });
   }
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 230 },
-    { field: "name", headerName: "Name", width: 160 },
+    { field: "id", headerName: "ID", width: 120 },
+    { field: "name", headerName: "Name", width: 150 },
     { field: "sku", headerName: "sku", width: 100 },
+    {
+      field: "createDate",
+      headerName: "created",
+      width: 170,
+      renderCell: (params) => {
+        const date = moment(params.row.createDate).format(
+          "MMMM D YYYY, h:mm a"
+        );
+        console.log(date);
+        return <div className="font- text-slate-800">{date}</div>;
+      },
+    },
     {
       field: "price",
       headerName: "Price",
@@ -92,23 +118,41 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
     {
       field: "action",
       headerName: "Actions",
-      width: 200,
+      width: 140,
       renderCell: (params) => {
         const { id, inStock, images } = params.row;
         return (
-          <div className="flex justify-between gap-4">
+          // <div className="flex  flex-col  flex-wrap gap-0">
+          <div className="grid grid-cols-3">
             <ActionBtn
               icon={MdCached}
+              action={"change stock status"}
               onClick={() => handleToggleStock(id, inStock)}
             />
             <ActionBtn
+              icon={MdRemoveRedEye}
+              action={"see product details"}
+              onClick={() => {
+                router.push(`product/${id}`);
+              }}
+            />
+            <ActionBtn
               icon={MdDelete}
+              action={"delete product"}
               onClick={() => handleDelete(id, images)}
             />
             <ActionBtn
-              icon={MdRemoveRedEye}
+              icon={MdCreate}
+              action={"edit product details"}
               onClick={() => {
-                router.push(`product/${id}`);
+                // router.push(`product/${id}`);
+              }}
+            />
+            <ActionBtn
+              icon={BiSolidDuplicate}
+              action={"duplicate product"}
+              onClick={() => {
+                // router.push(`product/${id}`);
               }}
             />
           </div>
@@ -183,6 +227,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
           pageSizeOptions={[9, 10]}
           checkboxSelection
           disableRowSelectionOnClick
+          rowHeight={90}
         />
       </div>
     </div>
