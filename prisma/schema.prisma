@@ -62,6 +62,7 @@ model Product {
   images Image[]
   sku String
   model String
+  createDate DateTime @default(now())
   
   sales Sale[]
 }
