@@ -22,6 +22,7 @@ import {
 import FirebaseApp from "@/libs/firebase";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import DataListInput from "@/app/components/inputs/DataListInput";
 export type ImageType = {
   color: string;
   colorCode: string;
@@ -74,6 +75,11 @@ const AddProductForm = () => {
       setIsProductCreated(false);
     }
   }, [isProductCreated]);
+
+  const onChangeCategory = (event: any) => {
+    // console.log("🟡", event.target.value);
+    setCustomValue("category", event.target.value);
+  };
 
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
@@ -213,53 +219,57 @@ const AddProductForm = () => {
   return (
     <>
       <Heading title="Add a product" center />
-      <div className=" max-w-3xl m-auto">
-        <Input
-          id="name"
-          label="Name"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-        />
-        <TextArea
-          id="description"
-          label="description"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-        />
-        <Input
-          id="price"
-          label="price"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-          type="number"
-        />
-        <Input
-          id="brand"
-          label="brand"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-        />
+      {/* <div className=" max-w-3xl m-auto flex"> */}
+      <div className="m-auto flex p-3">
+        <div className="w-1/3">
+          <Input
+            id="name"
+            label="Name"
+            disabled={isLoading}
+            register={register}
+            errors={errors}
+          />
+          <TextArea
+            id="description"
+            label="description"
+            disabled={isLoading}
+            register={register}
+            errors={errors}
+          />
+          <Input
+            id="price"
+            label="price"
+            disabled={isLoading}
+            register={register}
+            errors={errors}
+            type="number"
+          />
+          <Input
+            id="brand"
+            label="brand"
+            disabled={isLoading}
+            register={register}
+            errors={errors}
+          />
 
-        <Input
-          id="sku"
-          label="sku"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-        />
-        <CustomCheckBox
-          id="inStock"
-          label="This product is in stock"
-          disabled={isLoading}
-          register={register}
-        />
-        <div className="w-full font-medium ">
+          <Input
+            id="sku"
+            label="sku"
+            disabled={isLoading}
+            register={register}
+            errors={errors}
+          />
+
+          <CustomCheckBox
+            id="inStock"
+            label="This product is in stock"
+            disabled={isLoading}
+            register={register}
+          />
+        </div>
+        <div className="w-1/3 font-medium ">
           <div className="mb-2 font-semibold ">Select a Category</div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h[50vh] overflow-auto">
+          {/* <div className="grid grid-cols-2 md:grid-cols-5 gap-1  overflow-auto">
             {categoryButtons.map((item) => {
               return (
                 <div key={item.label} className="col-span">
@@ -273,15 +283,24 @@ const AddProductForm = () => {
                 </div>
               );
             })}
-          </div>
+          </div> */}
+
+          <DataListInput
+            data={categoryButtons}
+            register={register}
+            id="Category"
+            errors={errors}
+            onClick={(category: any) => setCustomValue("category", category)}
+            onChange={onChangeCategory}
+          />
         </div>
 
-        <div className="w-full flex flex-col flex-wrap gap-4">
+        <div className="w-1/3 flex flex-col flex-wrap gap-4">
           <div>
             <div className="font-bold">Select available colors</div>
             <div className="text-sm">Please select all available colors</div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             {productColors.map((item, index) => {
               return (
                 <ColorSelector
