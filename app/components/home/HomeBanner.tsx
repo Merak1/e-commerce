@@ -6,9 +6,9 @@ import HomeCategories from "./HomeCategories";
 
 const HomeBanner = () => {
   const carouselImages = [
-    { src: "/watame.png", name: "watame1" },
-    { src: "/watame2.jpg", name: "watame2" },
-    { src: "/watame3.jpg", name: "watame3" },
+    { src: "/cases_1.jpg", name: "cases_1" },
+    { src: "/cases_2.jpg", name: "cases_2" },
+    { src: "/cases_3.jpg", name: "cases_3" },
   ];
 
   return (

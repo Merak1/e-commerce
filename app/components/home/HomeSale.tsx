@@ -8,7 +8,7 @@ const HomeSale: React.FC<HomeSaleProps> = ({ text }) => {
     <div className="h-1/2 flex flex-col justify-center my-auto text-center ">
       <p>{text}</p>
       <Image
-        src="/watame3.jpg"
+        src="/cases_2.jpg"
         alt="watame"
         width={250}
         height={200}

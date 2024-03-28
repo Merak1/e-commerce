@@ -13,7 +13,7 @@ const Category: React.FC<CategoryProps> = ({ name }) => {
        rounded-full  relative"
       >
         <Image
-          src="/watame2.jpg"
+          src="/case.jpg"
           alt="benis"
           // width={200}
           // height={200}
