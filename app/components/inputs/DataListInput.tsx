@@ -25,21 +25,14 @@ const DataListInput: React.FC<DataListInputProps> = ({
   onChange,
   onClick,
 }) => {
-  //   const [text, setText] = useState("");
-
-  //   const onChange = (event: { target: { value: SetStateAction<string> } }) => {
-  //     setText(event.target.value);
-  //   };
-
   return (
     <div className="m-x-auto w-full">
       <div className="flex ">
         <input
-          placeholder=""
           type="search"
+          defaultValue={label}
           list="list"
           autoComplete="on"
-          value={label}
           onChange={() => onChange(event)}
           className={`peer w-full p-4 pt-6 outline-none bg-white
         font-light border-2 rounded-md transition disabled:opacity-70 
@@ -60,20 +53,6 @@ const DataListInput: React.FC<DataListInputProps> = ({
             )
           )}
         </datalist>
-        <label
-          className={`absolute cursor-text text-md
-        duration-150 transform 
-        -translate-y-3 top-5 z-10 origin-[0]
-        left-4 peer-placeholder-shown:scale-100
-        peer-placeholder-shown:translate-y-0 
-        peer-focus:scale-75 peer-focus:-translate-y-4 capitalize
-        ${errors[id] ? "border-rose-400" : "border-slate-300"}
-
-       `}
-          htmlFor={id}
-        >
-          {label}
-        </label>
       </div>
     </div>
   );
