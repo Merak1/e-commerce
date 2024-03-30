@@ -1,0 +1,33 @@
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+interface AccordionComponentProps {
+  children: React.ReactNode;
+  title: string;
+  isDefault?: boolean;
+}
+
+const AccordionComponent: React.FC<AccordionComponentProps> = ({
+  title,
+  children,
+  isDefault,
+}) => {
+  return (
+    <>
+      <Accordion defaultExpanded={isDefault}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id={`panel1-header-${title}`}
+        >
+          <Typography>{title}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>{children}</AccordionDetails>
+      </Accordion>
+    </>
+  );
+};
+
+export default AccordionComponent;
