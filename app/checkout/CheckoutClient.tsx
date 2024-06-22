@@ -1,7 +1,7 @@
 "use client";
 import { useCart } from "@/hooks/useCart";
 import { parseUrl } from "next/dist/shared/lib/router/utils/parse-url";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";
@@ -12,9 +12,14 @@ import Button from "../components/Button";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 );
-
-const CheckoutClient = () => {
-  const { cartProducts, paymentIntent, handleSetPaymentIntent } = useCart();
+interface CheckoutClientProps {
+  currentUserEmail: any;
+}
+const CheckoutClient: React.FC<CheckoutClientProps> = ({
+  currentUserEmail,
+}) => {
+  const { cartProducts, paymentIntent, handleSetPaymentIntent, shippingPrice } =
+    useCart();
   const [loading, setLoading] = useState<true | false>(false);
   const [error, setError] = useState<true | false>(false);
   const [clientSecret, setClientSecret] = useState<string>("");
@@ -33,6 +38,7 @@ const CheckoutClient = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: cartProducts,
+          shipping: shippingPrice,
           payment_intent_id: paymentIntent,
         }),
       })
@@ -76,6 +82,7 @@ const CheckoutClient = () => {
         {clientSecret && cartProducts && (
           <Elements options={options} stripe={stripePromise}>
             <CheckoutForm
+              currentUserEmail={currentUserEmail}
               clientSecret={clientSecret}
               handleSetPaymentSuccess={handleSetPaymentSuccess}
               loading={loading}

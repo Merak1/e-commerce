@@ -1,21 +1,28 @@
 import { getUniqueString } from "@/utils/uniqueString";
 import Image from "next/image";
-import CurrentImageDelete from "./CurrentImageDelete";
+import CurrentImageDelete from "../CurrentImageDelete";
 import { useEffect, useState } from "react";
+import { imagesArray } from "../ManageProductsClient";
 
-interface UpdateProductFormExistingImagesProps {
+interface DeleteProductExistingImageProps {
   imagesLength: number;
   image: any;
+  selectForDelete: (image: imagesArray) => void;
 }
 
-const UpdateProductFormExistingImages: React.FC<
-  UpdateProductFormExistingImagesProps
-> = ({ imagesLength, image }) => {
+const DeleteProductExistingImage: React.FC<DeleteProductExistingImageProps> = ({
+  imagesLength,
+  image,
+  selectForDelete,
+}) => {
   const [toggle, setToggle] = useState(false);
 
-  useEffect(() => {
-    console.log("  toggle from outside", toggle);
-  }, [toggle]);
+  // useEffect(() => {
+  //   console.log("  toggle from outside", toggle);
+  // }, [toggle]);
+  // const selectForDelete =(image: imagesArray) => {
+
+  // }
   return (
     <div
       className={`
@@ -27,6 +34,8 @@ const UpdateProductFormExistingImages: React.FC<
         className={`relative w-[70px] aspect-square
         `}
         key={image.color + getUniqueString(4)}
+        title={image.color}
+        onClick={() => selectForDelete(image)}
       >
         {image.color}
         <Image
@@ -45,4 +54,4 @@ const UpdateProductFormExistingImages: React.FC<
   );
 };
 
-export default UpdateProductFormExistingImages;
+export default DeleteProductExistingImage;

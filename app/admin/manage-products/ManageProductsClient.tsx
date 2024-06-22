@@ -10,7 +10,7 @@ import { Product } from "@prisma/client";
 import axios from "axios";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { SetStateAction, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import {
   MdCached,
@@ -22,20 +22,45 @@ import {
 } from "react-icons/md";
 import { BiSolidDuplicate } from "react-icons/bi";
 import Modal from "@mui/material/Modal";
-import DuplicateProduct from "./DuplicateProduct";
+import UpdateProduct from "./UpdateProduct";
+import { createContext } from "react";
+import { getUniqueString } from "@/utils/uniqueString";
 
 interface ManageProductsClientProps {
   products: Product[] | undefined;
+  // images: { color: string; colorCode: string; image: string }[];
+  allDbImages: imagesArray;
 }
 
+export type imagesArray = { color: string; colorCode: string; image: string }[];
+// export const allDbImagesContext = createContext<imagesArray | undefined>(
+//   undefined
+// );
+
+export const allDbImagesContext = createContext<any>(undefined);
 const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   products,
+  allDbImages,
 }) => {
   const router = useRouter();
   const storage = getStorage(FirebaseApp);
+  const [selectedRow, setSelectedRow] = useState({});
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpenEditButton = (selectedProduct: any) => {
+    console.log("modifying selected row ");
+    setSelectedRow(selectedProduct);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setSelectedRow({});
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    console.log("selectedRow 😃", selectedRow);
+  }, [selectedRow]);
 
   let rows: any = [];
 
@@ -46,12 +71,14 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
         name,
         price,
         category,
+        description,
         brand,
         inStock,
         images,
         sku,
         createDate,
       } = product;
+      // console.log("product 🧅", product);
       return {
         id: id,
         name: name,
@@ -60,6 +87,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
         brand: brand,
         inStock: inStock,
         images: images,
+        description: description,
         sku: sku,
         createDate: createDate,
       };
@@ -70,15 +98,16 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
     { field: "id", headerName: "ID", width: 120 },
     { field: "name", headerName: "Name", width: 150 },
     { field: "sku", headerName: "sku", width: 100 },
+    { field: "description", headerName: "description", width: 100 },
     {
       field: "createDate",
       headerName: "created",
-      width: 170,
+      width: 120,
       renderCell: (params) => {
         const date = moment(params.row.createDate).format(
           "MMMM D YYYY, h:mm a"
         );
-        console.log(date);
+        // console.log(date);
         return <div className="font- text-slate-800">{date}</div>;
       },
     },
@@ -127,6 +156,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
       width: 140,
       renderCell: (params) => {
         const { id, inStock, images } = params.row;
+        // console.log("params.row", params.row);
         return (
           // <div className="flex  flex-col  flex-wrap gap-0">
           <div className="grid grid-cols-3">
@@ -150,7 +180,8 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
             <ActionBtn
               icon={MdCreate}
               action={"edit product details"}
-              onClick={() => handleOpen()}
+              // onClick={() => handleOpen()}
+              onClick={() => handleOpenEditButton(params.row)}
             />
             <ActionBtn
               icon={BiSolidDuplicate}
@@ -213,36 +244,50 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
         console.log(error);
       });
   }, []);
-
+  const customRef = useCallback((ref: any) => {
+    // ref element accessible here
+    // console.log("ref ", ref);
+  }, []);
   return (
-    <div className="max-w-[1150px] m-auto text-xl">
-      <div className="mb-4 mt-8">
-        <Heading title="Manage products" center />
+    <allDbImagesContext.Provider value={allDbImages}>
+      <div className="max-w-[1150px] m-auto text-xl">
+        <div className="mb-4 mt-8">
+          <Heading title="Manage products" center />
+        </div>
+        <Modal
+          ref={customRef}
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <div ref={customRef} className="bg-backgroundYellow mt-5">
+            <UpdateProduct formValues={selectedRow} key={getUniqueString(8)} />
+          </div>
+        </Modal>
+        {/* <UpdateProductModal
+          open={open}
+          handleClose={handleClose}
+          selectedRow={selectedRow}
+
+        /> */}
+        <div style={{ height: 600, width: "100%" }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 9 },
+              },
+            }}
+            pageSizeOptions={[9, 10]}
+            // checkboxSelection
+            disableRowSelectionOnClick
+            rowHeight={90}
+          />
+        </div>
       </div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <DuplicateProduct />
-      </Modal>
-      <div style={{ height: 600, width: "100%" }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 9 },
-            },
-          }}
-          pageSizeOptions={[9, 10]}
-          checkboxSelection
-          disableRowSelectionOnClick
-          rowHeight={90}
-        />
-      </div>
-    </div>
+    </allDbImagesContext.Provider>
   );
 };
 

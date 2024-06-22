@@ -23,6 +23,7 @@ import FirebaseApp from "@/libs/firebase";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import DataListInput from "@/app/components/inputs/DataListInput";
+import { getUniqueString } from "@/utils/uniqueString";
 export type ImageType = {
   color: string;
   colorCode: string;
@@ -34,12 +35,28 @@ export type UplodedImageType = {
   image: string; // string of image in db
 };
 
-const AddProductForm = () => {
+interface AddProductFormProps {
+  formValues?: any;
+}
+
+const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<ImageType[] | null>(null);
   const [isProductCreated, setIsProductCreated] = useState(false);
   const [imagesUrls, setImagesUrls] = useState<any>();
   const router = useRouter();
+  const {
+    name: defaultName,
+    description: defaultDescription,
+    price: defaultPrice,
+    brand: defaultBrand,
+    category: defaultCategory,
+    inStock: defaultInStock,
+    images: defaultImages,
+    sku: defaultSku,
+    model: defaultModel,
+  } = formValues || {};
+  // console.log("formValues 🦗", formValues);
   const {
     register,
     handleSubmit,
@@ -61,11 +78,35 @@ const AddProductForm = () => {
       // sale: false,
     },
   });
-  const category = watch("category");
 
   useEffect(() => {
+    // useForm(formValues);
+    if (formValues !== undefined) {
+      console.log("Setting formvalues from uef");
+      console.log("defaultName", defaultName);
+      setCustomValue("name", defaultName);
+      setCustomValue("description", defaultDescription);
+      setCustomValue("price", defaultPrice);
+      setCustomValue("brand", defaultBrand);
+      setCustomValue("category", defaultCategory);
+      setCustomValue("inStock", defaultInStock);
+      setCustomValue("images", defaultImages);
+      setCustomValue("sku", defaultSku);
+      setCustomValue("model", defaultModel);
+
+      setImages(images);
+    }
+  }, [formValues]);
+  // console.log("formValues", formValues);
+
+  const category = watch("category");
+  useEffect(() => {
+    console.log("images 🟠", images);
+    console.log("imagesUrls 🟡", imagesUrls);
+  }, [images, imagesUrls]);
+  useEffect(() => {
     setCustomValue("images", images);
-    // console.log("IMAGES", images);
+    console.log("IMAGES", images);
   }, [images]);
 
   useEffect(() => {
@@ -220,7 +261,7 @@ const AddProductForm = () => {
     <>
       <Heading title="Add a product" center />
       {/* <div className=" max-w-3xl m-auto flex"> */}
-      <div className="m-auto flex p-3">
+      <div className="m-auto flex p-3 gap-3">
         <div className="w-1/3">
           <Input
             id="name"

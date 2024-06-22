@@ -15,6 +15,8 @@ export const LOCAL_STORAGE_CARTITEMS = "eshopCart";
 type CartContextType = {
   cartTotalQuantity: number;
   cartTotalAmount: number;
+  shippingPrice: number;
+  handleAddShippingPriceToCart: (shipPrice: number) => void;
   cartProducts: CartProductType[] | null;
   handleAddProductToCart: (product: CartProductType) => void;
   handleRemoveProductFromCart: (product: CartProductType) => void;
@@ -34,6 +36,7 @@ interface Props {
 export const CartContextProvider = (props: Props) => {
   const [cartTotalQuantity, setCartTotalQuantity] = useState(0);
   const [cartTotalAmount, setCartTotalAmount] = useState(0);
+  const [shippingPrice, setShippingPrice] = useState(0);
   const [cartProducts, setCartProducts] = useState<CartProductType[] | null>(
     null
   );
@@ -97,6 +100,30 @@ export const CartContextProvider = (props: Props) => {
       setCartProducts(cart);
     }
   }, []);
+
+  const handleAddShippingPriceToCart = useCallback(
+    (shipPrice: number) => {
+      setShippingPrice(shipPrice);
+      // setShippingPrice((prev) => {
+      //   let updatedCart;
+
+      //   if (prev) {
+      //     updatedCart = [...prev, shipPrice];
+      //   } else {
+      //     updatedCart = [shipPrice];
+      //   }
+      toast.success("shipPrice updated", {
+        id: "Product added to cart",
+      });
+      //   localStorage.setItem(
+      //     LOCAL_STORAGE_CARTITEMS,
+      //     JSON.stringify(updatedCart)
+      //   );
+      //   return updatedCart;
+      // });
+    },
+    [shippingPrice]
+  );
 
   const handleAddProductToCart = useCallback(
     (product: CartProductType) => {
@@ -226,6 +253,8 @@ export const CartContextProvider = (props: Props) => {
     paymentIntent,
     handleSetPaymentIntent,
     deletePaymentIntent,
+    handleAddShippingPriceToCart,
+    shippingPrice,
   };
   return <CartContext.Provider value={value} {...props} />;
 };

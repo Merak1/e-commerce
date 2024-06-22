@@ -19,6 +19,11 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const customColor = item.colorCode;
+
+  // useEffect(() => {
+  //   console.log("isSelected", isSelected);
+  // }, [isSelected]);
+
   useEffect(() => {
     if (isProductCreated) {
       setIsSelected(false);
@@ -40,7 +45,7 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({
   }, []);
   return (
     <div
-      className="grid grid-cols-1  overflow-y-auto  border-b-[1.2px] 
+      className="grid grid-cols-1  overflow-y-auto  border-b-[1.2px]
                             border-slate-200 items-center p-2
   "
     >

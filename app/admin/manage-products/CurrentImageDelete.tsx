@@ -10,7 +10,7 @@ const CurrentImageDelete: React.FC<CurrentImageDeleteProps> = ({
   toggle,
 }) => {
   const handleToggle = () => {
-    console.log("toggle button");
+    // console.log("toggle button");
     setToggle(!toggle);
   };
   return (

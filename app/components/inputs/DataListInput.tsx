@@ -1,3 +1,4 @@
+import { getUniqueString } from "@/utils/uniqueString";
 import { Key, SetStateAction, useState } from "react";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 interface DataListInputProps {
@@ -47,7 +48,7 @@ const DataListInput: React.FC<DataListInputProps> = ({
               value: Key | null | undefined;
               label: string | number | readonly string[] | undefined;
             }) => (
-              <div key={d.value}>
+              <div key={d.value + getUniqueString(4)}>
                 <option key={d.value} value={d.label} />
               </div>
             )
