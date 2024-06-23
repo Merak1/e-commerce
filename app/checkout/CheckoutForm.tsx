@@ -68,8 +68,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   const [serviceName, setServiceName] = useState<string>("");
   const [quotes, setQuotes] = useState<any>();
 
-  const [selectedQuoteShippingCost, setSelectedQuoteShippingCost] = useState();
-
   const [selectedQuote, setSelectedQuote] = useState<any>({
     alias: "",
     amount: 0,
@@ -124,7 +122,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   });
   useEffect(() => {
     console.log("selectedQuote => |🔺", selectedQuote);
-    setSelectedQuoteShippingCost(selectedQuote.amount);
     handleAddShippingPriceToCart(selectedQuote.amount);
   }, [selectedQuote]);
 
@@ -174,7 +171,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   // }, [stripe]);
 
   useEffect(() => {
-    // console.log("quotes  🔵🔵", quotes);
+    console.log("quotes  🔵🔵", quotes);
   }, [quotes]);
 
   const handleSubmitForm = async (e: React.FormEvent) => {
@@ -238,15 +235,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       .catch((error) => console.log("error", error));
   };
 
-  let packages = {
-    h: 10,
-    w: 10,
-    hh: 10,
-    weight: 10,
-    sizeUnit: "CM",
-    weightUnit: "KG",
-    declaredValue: 10,
-  };
   const couriers = [
     "FedEx",
     "Estafeta",
@@ -296,9 +284,37 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     myHeaders.append("Weship-API-Version", "1.0");
     myHeaders.append("authorization", `${token}`);
 
-    let raw = `{\r\n    "sender": {\r\n        "name": "${sender.name}",\r\n        "email": "${sender.email}",\r\n        "companyName": "${sender.companyName}",\r\n        "phone": "${sender.phone}",\r\n        "country": "${sender.country}",\r\n        "country_code": "${sender.country_code}",\r\n        "province": "${sender.province}",\r\n        "province_code": "${sender.province_code}",\r\n        "city": "${sender.city}",\r\n        "address1": "${sender.address1}",\r\n        "address2": "${sender.address2}",\r\n        "optionalInfo": "${sender.optionalInfo}",\r\n        "zip": "${sender.zip}"\r\n    },\r\n    "recipient": {\r\n        "name": "${recipient.name}",\r\n        "email": "${recipient.email}",\r\n        "companyName": "${recipient.companyName}",\r\n        "phone": "${recipient.phone}",\r\n        "country": "${recipient.country}",\r\n        "country_code": "${recipient.country_code}",\r\n        "province": "${recipient.province}",\r\n        "province_code": "${recipient.province_code}",\r\n        "city": "${recipient.city}",\r\n        "address1": "${recipient.address1}",\r\n        "address2": "${recipient.address2}",\r\n        "optionalInfo": " 🙂",\r\n        "zip": "${recipient.zip}"\r\n    },\r\n    "packages": [\r\n        {\r\n            "h": ${packages.h},\r\n            "w": ${packages.w},\r\n            "hh": ${packages.hh},\r\n            "weight": ${packages.weight},\r\n            "sizeUnit": "${packages.sizeUnit}",\r\n            "weightUnit": "${packages.weightUnit}",\r\n            "declaredValue": ${packages.declaredValue}\r\n        }\r\n    ],\r\n    "courier": [\r\n        "${selectedCourier}"]\r\n}`;
+    let packagesDetails = "";
 
-    // console.log("🧡🧡raw 🧡🧡: ", raw);
+    if (cartProducts) {
+      for (let i = 0; i < cartProducts.length; i++) {
+        const element = cartProducts[i];
+        console.log("element 👮", element);
+        const { packageInfo } = element;
+        console.log("packageInfo", packageInfo);
+        //  let individualItem = `{\r\n            "name": "${name}",\r\n            "quantity": ${quantity},\r\n            "originCountry": {\r\n                "name": "México",\r\n                "code": "MX"\r\n            },\r\n            "price_set": {\r\n                "shop_money": {\r\n                    "amount": "${price}",\r\n                    "currency_code": "MXN"\r\n                }\n      \r\n            }\r\n        },\r\n`;
+        //  let individualItemLast = `{\r\n            "name": "${name}",\r\n            "quantity": ${quantity},\r\n            "originCountry": {\r\n                "name": "México",\r\n                "code": "MX"\r\n            },\r\n            "price_set": {\r\n                "shop_money": {\r\n                    "amount": "${price}",\r\n                    "currency_code": "MXN"\r\n                }\n      \r\n            }\r\n        }\r\n`;
+
+        let individualItem = `{\r\n            "h": ${packageInfo.h},\r\n            "w": ${packageInfo.w},\r\n            "hh": ${packageInfo.hh},\r\n            "weight": ${packageInfo.weight},\r\n            "sizeUnit": "cm",\r\n            "weightUnit": "kg",\r\n            "declaredValue": ${packageInfo.declaredValue}\r\n        }\,\r\n`;
+        // let individualItem;
+
+        let individualItemLast = `{\r\n            "h": ${packageInfo.h},\r\n            "w": ${packageInfo.w},\r\n            "hh": ${packageInfo.hh},\r\n            "weight": ${packageInfo.weight},\r\n            "sizeUnit": "cm",\r\n            "weightUnit": "kg",\r\n            "declaredValue": ${packageInfo.declaredValue}\r\n\}`;
+
+        if (i === cartProducts.length - 1) {
+          packagesDetails += individualItemLast;
+        } else {
+          packagesDetails += individualItem;
+        }
+      }
+
+      // console.log("packagesDetails full 👮", packagesDetails);
+    }
+
+    // let raw = `{\r\n    "sender": {\r\n        "name": "${sender.name}",\r\n        "email": "${sender.email}",\r\n        "companyName": "${sender.companyName}",\r\n        "phone": "${sender.phone}",\r\n        "country": "${sender.country}",\r\n        "country_code": "${sender.country_code}",\r\n        "province": "${sender.province}",\r\n        "province_code": "${sender.province_code}",\r\n        "city": "${sender.city}",\r\n        "address1": "${sender.address1}",\r\n        "address2": "${sender.address2}",\r\n        "optionalInfo": "${sender.optionalInfo}",\r\n        "zip": "${sender.zip}"\r\n    },\r\n    "recipient": {\r\n        "name": "${recipient.name}",\r\n        "email": "${recipient.email}",\r\n        "companyName": "${recipient.companyName}",\r\n        "phone": "${recipient.phone}",\r\n        "country": "${recipient.country}",\r\n        "country_code": "${recipient.country_code}",\r\n        "province": "${recipient.province}",\r\n        "province_code": "${recipient.province_code}",\r\n        "city": "${recipient.city}",\r\n        "address1": "${recipient.address1}",\r\n        "address2": "${recipient.address2}",\r\n        "optionalInfo": " 🙂",\r\n        "zip": "${recipient.zip}"\r\n    },\r\n    "packages": [\r\n        {\r\n            "h": ${packages.h},\r\n            "w": ${packages.w},\r\n            "hh": ${packages.hh},\r\n            "weight": ${packages.weight},\r\n            "sizeUnit": "${packages.sizeUnit}",\r\n            "weightUnit": "${packages.weightUnit}",\r\n            "declaredValue": ${packages.declaredValue}\r\n        }\r\n    ],\r\n    "courier": [\r\n        "${selectedCourier}"]\r\n}`;
+    // let raw = `{\r\n    "sender": {\r\n        "name": "${sender.name}",\r\n        "email": "${sender.email}",\r\n        "companyName": "${sender.companyName}",\r\n        "phone": "${sender.phone}",\r\n        "country": "${sender.country}",\r\n        "country_code": "${sender.country_code}",\r\n        "province": "${sender.province}",\r\n        "province_code": "${sender.province_code}",\r\n        "city": "${sender.city}",\r\n        "address1": "${sender.address1}",\r\n        "address2": "${sender.address2}",\r\n        "optionalInfo": "${sender.optionalInfo}",\r\n        "zip": "${sender.zip}"\r\n    },\r\n    "recipient": {\r\n        "name": "${recipient.name}",\r\n        "email": "${recipient.email}",\r\n        "companyName": "${recipient.companyName}",\r\n        "phone": "${recipient.phone}",\r\n        "country": "${recipient.country}",\r\n        "country_code": "${recipient.country_code}",\r\n        "province": "${recipient.province}",\r\n        "province_code": "${recipient.province_code}",\r\n        "city": "${recipient.city}",\r\n        "address1": "${recipient.address1}",\r\n        "address2": "${recipient.address2}",\r\n        "optionalInfo": " 🙂",\r\n        "zip": "${recipient.zip}"\r\n    },\r\n    "packages": [\r\n        {\r\n            "h": ${packages.h},\r\n            "w": ${packages.w},\r\n            "hh": ${packages.hh},\r\n            "weight": ${packages.weight},\r\n            "sizeUnit": "cm",\r\n            "weightUnit": "kg",\r\n            "declaredValue": ${packages.declaredValue}\r\n        }\r\n    ],\r\n    "courier": [\r\n        "${selectedCourier}"]\r\n}`;
+    let raw = `{\r\n    "sender": {\r\n        "name": "${sender.name}",\r\n        "email": "${sender.email}",\r\n        "companyName": "${sender.companyName}",\r\n        "phone": "${sender.phone}",\r\n        "country": "${sender.country}",\r\n        "country_code": "${sender.country_code}",\r\n        "province": "${sender.province}",\r\n        "province_code": "${sender.province_code}",\r\n        "city": "${sender.city}",\r\n        "address1": "${sender.address1}",\r\n        "address2": "${sender.address2}",\r\n        "optionalInfo": "${sender.optionalInfo}",\r\n        "zip": "${sender.zip}"\r\n    },\r\n    "recipient": {\r\n        "name": "${recipient.name}",\r\n        "email": "${recipient.email}",\r\n        "companyName": "${recipient.companyName}",\r\n        "phone": "${recipient.phone}",\r\n        "country": "${recipient.country}",\r\n        "country_code": "${recipient.country_code}",\r\n        "province": "${recipient.province}",\r\n        "province_code": "${recipient.province_code}",\r\n        "city": "${recipient.city}",\r\n        "address1": "${recipient.address1}",\r\n        "address2": "${recipient.address2}",\r\n        "optionalInfo": " 🙂",\r\n        "zip": "${recipient.zip}"\r\n    },\r\n    "packages": [\r\n   ${packagesDetails}     \r\n    ],\r\n    "courier": [\r\n        "${selectedCourier}"]\r\n}`;
+
+    console.log("🧡🧡raw 🧡🧡: ", raw);
 
     fetch(`https://${WESHIP_API}/orders/quoteOrder`, {
       method: "POST",
@@ -331,11 +347,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
         let individualItem = `{\r\n            "name": "${name}",\r\n            "quantity": ${quantity},\r\n            "originCountry": {\r\n                "name": "México",\r\n                "code": "MX"\r\n            },\r\n            "price_set": {\r\n                "shop_money": {\r\n                    "amount": "${price}",\r\n                    "currency_code": "MXN"\r\n                }\n      \r\n            }\r\n        },\r\n`;
         let individualItemLast = `{\r\n            "name": "${name}",\r\n            "quantity": ${quantity},\r\n            "originCountry": {\r\n                "name": "México",\r\n                "code": "MX"\r\n            },\r\n            "price_set": {\r\n                "shop_money": {\r\n                    "amount": "${price}",\r\n                    "currency_code": "MXN"\r\n                }\n      \r\n            }\r\n        }\r\n`;
-        console.log("cartProducts.length ", cartProducts.length);
-        console.log("i ", i);
 
         if (i === cartProducts.length - 1) {
-          // console.log("this is last item  🎪", element);
           bodyProducts += individualItemLast;
         } else {
           bodyProducts += individualItem;
@@ -398,6 +411,12 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
               >
                 show products
               </button> */}
+              <button
+                className="mb-2 font-semibold p-3 bg-purple-200"
+                onClick={() => showProducts()}
+              >
+                show products
+              </button>
               <button
                 className="mb-2 font-semibold p-3 bg-purple-200"
                 onClick={() => createShipment()}
