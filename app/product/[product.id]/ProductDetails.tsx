@@ -25,6 +25,15 @@ export type CartProductType = {
   selectedImage: selectedImageType;
   quantity: number;
   price: number;
+  packageInfo: Package;
+};
+
+export type Package = {
+  h: number;
+  w: number;
+  hh: number;
+  weight: number;
+  declaredValue: number;
 };
 
 export type selectedImageType = {
@@ -47,7 +56,24 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     selectedImage: { ...product.images[0] },
     quantity: 1,
     price: product.price,
+    packageInfo: {
+      h: product.packageInfo.h,
+      w: product.packageInfo.w,
+      hh: product.packageInfo.hh,
+      weight: product.packageInfo.weight,
+      declaredValue: product.packageInfo.declaredValue,
+    },
   });
+
+  // useEffect(() => {
+  //   // console.log("product ", product);
+
+  //   console.log("packageInfo", product);
+  // }, [cartProduct]);
+  // useEffect(() => {
+  //   console.log("cartProduct 💙", cartProduct);
+  // }, [cartProduct]);
+
   const handleColorSelect = useCallback(
     (value: selectedImageType) => {
       setCartProduct((prev) => {
