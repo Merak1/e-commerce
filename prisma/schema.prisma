@@ -63,7 +63,8 @@ model Product {
   sku String
   model String
   createDate DateTime @default(now())
-  
+  packageInfo Package
+
   sales Sale[]
 }
 
@@ -93,8 +94,18 @@ model Order {
   selectedImage Image
   quantity Int
   price Float
+  packageInfo Package
 }
-
+//npx prisma db push
+type Package  {
+  h Int
+  w Int
+  hh Int
+  weight Int
+  // sizeUnit String
+  // weightUnit String 
+  declaredValue Int
+}
 type Image {
   color String
   colorCode String
