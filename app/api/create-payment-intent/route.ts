@@ -2,9 +2,9 @@ import Stripe from "stripe";
 
 import primsa from "@/libs/prismadb";
 import { NextResponse } from "next/server";
-import { CartProductType } from "@/app/product/[product.id]/ProductDetails";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 import { rountToTwoDecimals } from "@/utils/roundToTwoDecimals";
+import { CartProductType } from "@/app/product/[product.id]/ProductDetails";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2023-10-16",
@@ -52,12 +52,13 @@ export async function POST(request: Request) {
 
   if (payment_intent_id) {
     //update the order
-
+    console.log("There is payment intent 👍");
     const currentIntent = await stripe.paymentIntents.retrieve(
       payment_intent_id
     );
 
     if (currentIntent) {
+      console.log("There currentIntent  👍👍");
       const updated_intent = await stripe.paymentIntents.update(
         payment_intent_id,
         { amount: total }
@@ -87,6 +88,7 @@ export async function POST(request: Request) {
     }
   } else {
     // create payment intent, then
+    console.log("There is No payment intent 👎");
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: total,
