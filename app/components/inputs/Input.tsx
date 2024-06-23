@@ -12,6 +12,7 @@ interface InputProps {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
   sm?: boolean;
+  valueAsNumber?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -23,6 +24,7 @@ const Input: React.FC<InputProps> = ({
   register,
   errors,
   sm,
+  valueAsNumber,
 }) => {
   return (
     <div className="w-full relative mt-3">
@@ -33,7 +35,7 @@ const Input: React.FC<InputProps> = ({
         type={type}
         required={required}
         placeholder=""
-        {...register(id, { required })}
+        {...register(id, { required, valueAsNumber })}
         className={`peer w-full 
         ${sm === true ? "p-2 pt-3" : "p-4 pt-6"}
         outline-none bg-white

@@ -24,6 +24,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import DataListInput from "@/app/components/inputs/DataListInput";
 import { getUniqueString } from "@/utils/uniqueString";
+
 export type ImageType = {
   color: string;
   colorCode: string;
@@ -55,6 +56,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
     images: defaultImages,
     sku: defaultSku,
     model: defaultModel,
+    packageInfo: defaultPackageInfo,
   } = formValues || {};
   // console.log("formValues 🦗", formValues);
   const {
@@ -75,6 +77,13 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
       images: [],
       sku: "",
       model: "",
+      packageInfo: {
+        h: 0,
+        w: 0,
+        hh: 0,
+        weight: 0,
+        declaredValue: 0,
+      },
       // sale: false,
     },
   });
@@ -93,10 +102,16 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
       setCustomValue("images", defaultImages);
       setCustomValue("sku", defaultSku);
       setCustomValue("model", defaultModel);
+      setCustomValue("packageInfo", defaultPackageInfo);
 
       setImages(images);
     }
   }, [formValues]);
+
+  useEffect(() => {
+    console.log("packageInfo", defaultPackageInfo);
+  }, [formValues]);
+
   // console.log("formValues", formValues);
 
   const category = watch("category");
@@ -334,6 +349,45 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
             onClick={(category: any) => setCustomValue("category", category)}
             onChange={onChangeCategory}
           />
+
+          <div className="w-[80%] m-auto">
+            <Input
+              id="packageInfo.h"
+              label="height h (alto cm)"
+              disabled={isLoading}
+              register={register}
+              type="number"
+              errors={errors}
+              valueAsNumber={true}
+            />
+            <Input
+              id="packageInfo.w"
+              label="width w (ancho cm)"
+              disabled={isLoading}
+              register={register}
+              type="number"
+              errors={errors}
+              valueAsNumber={true}
+            />
+            <Input
+              id="packageInfo.hh"
+              label="depth hh (profundidad cm)"
+              disabled={isLoading}
+              register={register}
+              type="number"
+              errors={errors}
+              valueAsNumber={true}
+            />
+            <Input
+              id="packageInfo.declaredValue"
+              label="declared value (valor declarado)"
+              disabled={isLoading}
+              register={register}
+              type="number"
+              errors={errors}
+              valueAsNumber={true}
+            />
+          </div>
         </div>
 
         <div className="w-1/3 flex flex-col flex-wrap gap-4">

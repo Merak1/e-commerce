@@ -8,22 +8,16 @@ import { useRouter } from "next/navigation";
 import Button from "../Button";
 import { useCart } from "@/hooks/useCart";
 import { useState } from "react";
-import { selectedImageType } from "@/app/product/[product.id]/ProductDetails";
+import {
+  CartProductType,
+  selectedImageType,
+} from "@/app/product/[product.id]/ProductDetails";
 import ProductImagePreview from "./ProductImagePreview";
 
 interface ProductCardProps {
   product: any;
 }
-export type CartProductType = {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  brand: number;
-  selectedImage: selectedImageType;
-  quantity: number;
-  price: number;
-};
+
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const {
     brand,
@@ -36,6 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     price,
     sku,
     images,
+    packageInfo,
   } = product;
   const imagesAmount = images.length;
   const router = useRouter();
@@ -51,6 +46,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     selectedImage: { ...images[0] },
     quantity: 1,
     price: price,
+    packageInfo: {
+      h: packageInfo.h,
+      w: packageInfo.w,
+      hh: packageInfo.hh,
+      weight: packageInfo.weight,
+      declaredValue: packageInfo.declaredValue,
+    },
   });
 
   const handlePreviousImageSelected = () => {
