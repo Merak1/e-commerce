@@ -21,7 +21,11 @@ export async function POST(request: Request) {
       sku,
       model,
       sales,
+      packageInfo,
     } = body;
+
+    // console.log("leets see if packageInfo is getting in");
+    // console.log("packageInfo 😫😫😫😫😫", packageInfo);
 
     const product = await prisma.product.create({
       data: {
@@ -36,6 +40,7 @@ export async function POST(request: Request) {
         sku,
         model,
         sales,
+        packageInfo,
       },
     });
 
