@@ -57,6 +57,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
     sku: defaultSku,
     model: defaultModel,
     packageInfo: defaultPackageInfo,
+    productType: defaultProductType,
   } = formValues || {};
   // console.log("formValues 🦗", formValues);
   const {
@@ -77,6 +78,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
       images: [],
       sku: "",
       model: "",
+      productType: "",
       packageInfo: {
         h: 0,
         w: 0,
@@ -87,6 +89,8 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
       // sale: false,
     },
   });
+
+  const productTypes = ["THERMOS", "CASE"];
 
   useEffect(() => {
     // useForm(formValues);
@@ -387,6 +391,26 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
               errors={errors}
               valueAsNumber={true}
             />
+          </div>
+          <div className="m-auto ">
+            <p>Select product type</p>
+
+            <div className="flex justify-center">
+              {productTypes &&
+                productTypes.map((productType) => {
+                  return (
+                    <div key={productType} className="flex flex-col m-2 ">
+                      <h1>{productType} </h1>
+                      <input
+                        className="cursor-pointer"
+                        type="radio"
+                        value={productType}
+                        {...register("productType")}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </div>
 

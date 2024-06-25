@@ -22,6 +22,7 @@ export async function POST(request: Request) {
       model,
       sales,
       packageInfo,
+      productType,
     } = body;
 
     // console.log("leets see if packageInfo is getting in");
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
         model,
         sales,
         packageInfo,
+        productType,
       },
     });
 

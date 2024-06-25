@@ -64,7 +64,7 @@ model Product {
   model String
   createDate DateTime @default(now())
   packageInfo Package
-
+  productType ProductType
   sales Sale[]
 }
 
@@ -85,6 +85,10 @@ model Order {
 
 }
 
+enum ProductType  {
+  THERMOS
+  CASE
+}
  type CartProductType  {
   id String
   name String
@@ -95,6 +99,7 @@ model Order {
   quantity Int
   price Float
   packageInfo Package
+  productType ProductType
 }
 //npx prisma db push
 type Package  {

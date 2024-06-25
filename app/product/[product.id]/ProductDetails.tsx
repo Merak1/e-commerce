@@ -26,8 +26,13 @@ export type CartProductType = {
   quantity: number;
   price: number;
   packageInfo: Package;
+  productType: ProductType;
 };
 
+export enum ProductType {
+  THERMOS = "THERMOS",
+  CASE = "CASE",
+}
 export type Package = {
   h: number;
   w: number;
@@ -56,6 +61,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     selectedImage: { ...product.images[0] },
     quantity: 1,
     price: product.price,
+    productType: product.productType,
     packageInfo: {
       h: product.packageInfo.h,
       w: product.packageInfo.w,
@@ -70,9 +76,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   //   console.log("packageInfo", product);
   // }, [cartProduct]);
-  // useEffect(() => {
-  //   console.log("cartProduct 💙", cartProduct);
-  // }, [cartProduct]);
+  useEffect(() => {
+    console.log("cartProduct 💙", cartProduct);
+  }, [cartProduct]);
 
   const handleColorSelect = useCallback(
     (value: selectedImageType) => {

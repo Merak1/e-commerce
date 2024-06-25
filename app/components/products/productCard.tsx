@@ -30,6 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     price,
     sku,
     images,
+    productType,
     packageInfo,
   } = product;
   const imagesAmount = images.length;
@@ -46,6 +47,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     selectedImage: { ...images[0] },
     quantity: 1,
     price: price,
+    productType: productType,
     packageInfo: {
       h: packageInfo.h,
       w: packageInfo.w,
