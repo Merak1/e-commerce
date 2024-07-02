@@ -13,17 +13,20 @@ import toast from "react-hot-toast";
 import Heading from "../components/Heading";
 import Button from "../components/Button";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import Quotes from "./Quotes";
-import { SafeUser } from "@/types";
 import { convertStateTo2char } from "@/utils/concertProvinceToProvinceCode";
 import { convertProvinceCodeToProvince } from "@/utils/convertProvinceCodeToProvince";
+import { getShippingContainers } from "@/utils/bussinessLogic";
 
 interface CheckoutFormProps {
   clientSecret: string;
   handleSetPaymentSuccess: (value: boolean) => void;
   loading: boolean;
   currentUserEmail: string;
+  packagesDetails: any;
+  setPackagesDetails: any;
+  shippingDetailsExist: boolean;
+  setShippingDetailsExist: any;
 }
 
 const CheckoutForm: React.FC<CheckoutFormProps> = ({
@@ -31,6 +34,10 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   clientSecret,
   handleSetPaymentSuccess,
   loading,
+  packagesDetails,
+  setPackagesDetails,
+  shippingDetailsExist,
+  setShippingDetailsExist,
 }) => {
   const {
     register,
@@ -120,8 +127,14 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     optionalInfo: " ", //☑️
     zip: "", //☑️
   });
+
   useEffect(() => {
-    console.log("selectedQuote => |🔺", selectedQuote);
+    if (packagesDetails.success === true) {
+      setShippingDetailsExist(true);
+    }
+  }, [packagesDetails]);
+
+  useEffect(() => {
     handleAddShippingPriceToCart(selectedQuote.amount);
   }, [selectedQuote]);
 
@@ -157,18 +170,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     authentificateWeShip();
   }, []);
 
-  // useEffect(() => {
-  //   if (!stripe) {
-  //     console.log("No stripe available");
-  //     return;
-  //   }
-  //   if (!clientSecret) {
-  //     console.log("No client secret");
-  //     return;
-  //   }
-  //   // console.log("something about stripe is changing?");
-  //   handleSetPaymentSuccess(false);
-  // }, [stripe]);
+  useEffect(() => {
+    handlePackagesDetails(cartProducts);
+  }, [cartProducts]);
 
   useEffect(() => {
     console.log("quotes  🔵🔵", quotes);
@@ -247,7 +251,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   ];
 
   const setFomrValueToState = (event: any) => {
-    console.log("setting form to state: ");
+    // console.log("setting form to state: ");
 
     console.log("event from event 💅", event);
     const address = event.value.address;
@@ -276,11 +280,37 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     });
   };
 
+  const handlePackagesDetails = (cartProducts: any) => {
+    //! logica de que cajas van dónde dependiendo de la cantidad de cosas
+    console.log("cartProducts from handlePackageDetails", cartProducts);
+
+    const shippingContainers = getShippingContainers(cartProducts);
+    // dependiendo de la cantidad de elementos, y los tipos de elementos obtener el tipo y la cantidad de cajas
+    // for (const cartProduct of cartProducts) {
+    //   console.log("cartProduct", cartProduct);
+
+    //   // const {productType} = cartProduct
+    // }
+
+    console.log(
+      "result of getShippingContainers from checkoutForm ✋",
+      shippingContainers
+    );
+  };
+
   const createNewQuote = () => {
     var myHeaders = new Headers();
 
     // setFomrValueToState()
-
+    let packages = {
+      h: 10,
+      w: 10,
+      hh: 5,
+      weight: 1,
+      sizeUnit: "CM",
+      weightUnit: "KG",
+      declaredValue: 0,
+    };
     myHeaders.append("Weship-API-Version", "1.0");
     myHeaders.append("authorization", `${token}`);
 
@@ -309,10 +339,12 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
       // console.log("packagesDetails full 👮", packagesDetails);
     }
+    //  var raw =
+    // '{\r\n    "sender": {\r\n        "name": "Sender Name",\r\n        "email": "sender@email.com",\r\n        "companyName": "Sender Company",\r\n        "phone": "811111111111",\r\n        "country": "México",\r\n        "country_code": "MX",\r\n        "province": "Puebla",\r\n        "province_code": "PU",\r\n        "city": "Puebla",\r\n        "address1": "Cuauhtémoc 28",\r\n        "address2": "Agrícola Ignacio Zaragoza",\r\n        "optionalInfo": "",\r\n        "zip": "72100"\r\n    },\r\n    "recipient": {\r\n        "name": "Recipient Name",\r\n        "email": "recipient@email.com",\r\n        "companyName": "ASD",\r\n        "phone": "211111111111",\r\n        "country": "Mexico",\r\n        "country_code": "MX",\r\n        "province": "Nuevo León",\r\n        "province_code": "NL",\r\n        "city": "San Pedro Garza García",\r\n        "address1": "Valle del Mezquite 1431",\r\n        "address2": "Palo Blanco",\r\n        "optionalInfo": "",\r\n        "zip": "66236"\r\n    },\r\n    "packages": [\r\n        {\r\n            "h": 10,\r\n            "w": 10,\r\n            "hh": 2,\r\n            "weight": 1,\r\n            "sizeUnit": "CM",\r\n            "weightUnit": "KG",\r\n            "declaredValue": 0\r\n        }\r\n    ],\r\n    "courier": [\r\n        "fedex",\r\n        "estafeta",\r\n        "99minutos"\r\n    ]\r\n}';
 
-    // let raw = `{\r\n    "sender": {\r\n        "name": "${sender.name}",\r\n        "email": "${sender.email}",\r\n        "companyName": "${sender.companyName}",\r\n        "phone": "${sender.phone}",\r\n        "country": "${sender.country}",\r\n        "country_code": "${sender.country_code}",\r\n        "province": "${sender.province}",\r\n        "province_code": "${sender.province_code}",\r\n        "city": "${sender.city}",\r\n        "address1": "${sender.address1}",\r\n        "address2": "${sender.address2}",\r\n        "optionalInfo": "${sender.optionalInfo}",\r\n        "zip": "${sender.zip}"\r\n    },\r\n    "recipient": {\r\n        "name": "${recipient.name}",\r\n        "email": "${recipient.email}",\r\n        "companyName": "${recipient.companyName}",\r\n        "phone": "${recipient.phone}",\r\n        "country": "${recipient.country}",\r\n        "country_code": "${recipient.country_code}",\r\n        "province": "${recipient.province}",\r\n        "province_code": "${recipient.province_code}",\r\n        "city": "${recipient.city}",\r\n        "address1": "${recipient.address1}",\r\n        "address2": "${recipient.address2}",\r\n        "optionalInfo": " 🙂",\r\n        "zip": "${recipient.zip}"\r\n    },\r\n    "packages": [\r\n        {\r\n            "h": ${packages.h},\r\n            "w": ${packages.w},\r\n            "hh": ${packages.hh},\r\n            "weight": ${packages.weight},\r\n            "sizeUnit": "${packages.sizeUnit}",\r\n            "weightUnit": "${packages.weightUnit}",\r\n            "declaredValue": ${packages.declaredValue}\r\n        }\r\n    ],\r\n    "courier": [\r\n        "${selectedCourier}"]\r\n}`;
+    let raw = `{\r\n    "sender": {\r\n        "name": "${sender.name}",\r\n        "email": "${sender.email}",\r\n        "companyName": "${sender.companyName}",\r\n        "phone": "${sender.phone}",\r\n        "country": "${sender.country}",\r\n        "country_code": "${sender.country_code}",\r\n        "province": "${sender.province}",\r\n        "province_code": "${sender.province_code}",\r\n        "city": "${sender.city}",\r\n        "address1": "${sender.address1}",\r\n        "address2": "${sender.address2}",\r\n        "optionalInfo": "${sender.optionalInfo}",\r\n        "zip": "${sender.zip}"\r\n    },\r\n    "recipient": {\r\n        "name": "${recipient.name}",\r\n        "email": "${recipient.email}",\r\n        "companyName": "${recipient.companyName}",\r\n        "phone": "${recipient.phone}",\r\n        "country": "${recipient.country}",\r\n        "country_code": "${recipient.country_code}",\r\n        "province": "${recipient.province}",\r\n        "province_code": "${recipient.province_code}",\r\n        "city": "${recipient.city}",\r\n        "address1": "${recipient.address1}",\r\n        "address2": "${recipient.address2}",\r\n        "optionalInfo": " 🙂",\r\n        "zip": "${recipient.zip}"\r\n    },\r\n    "packages": [\r\n        {\r\n            "h": ${packages.h},\r\n            "w": ${packages.w},\r\n            "hh": ${packages.hh},\r\n            "weight": ${packages.weight},\r\n            "sizeUnit": "${packages.sizeUnit}",\r\n            "weightUnit": "${packages.weightUnit}",\r\n            "declaredValue": ${packages.declaredValue}\r\n        }\r\n    ],\r\n    "courier": [\r\n        "${selectedCourier}"]\r\n}`;
     // let raw = `{\r\n    "sender": {\r\n        "name": "${sender.name}",\r\n        "email": "${sender.email}",\r\n        "companyName": "${sender.companyName}",\r\n        "phone": "${sender.phone}",\r\n        "country": "${sender.country}",\r\n        "country_code": "${sender.country_code}",\r\n        "province": "${sender.province}",\r\n        "province_code": "${sender.province_code}",\r\n        "city": "${sender.city}",\r\n        "address1": "${sender.address1}",\r\n        "address2": "${sender.address2}",\r\n        "optionalInfo": "${sender.optionalInfo}",\r\n        "zip": "${sender.zip}"\r\n    },\r\n    "recipient": {\r\n        "name": "${recipient.name}",\r\n        "email": "${recipient.email}",\r\n        "companyName": "${recipient.companyName}",\r\n        "phone": "${recipient.phone}",\r\n        "country": "${recipient.country}",\r\n        "country_code": "${recipient.country_code}",\r\n        "province": "${recipient.province}",\r\n        "province_code": "${recipient.province_code}",\r\n        "city": "${recipient.city}",\r\n        "address1": "${recipient.address1}",\r\n        "address2": "${recipient.address2}",\r\n        "optionalInfo": " 🙂",\r\n        "zip": "${recipient.zip}"\r\n    },\r\n    "packages": [\r\n        {\r\n            "h": ${packages.h},\r\n            "w": ${packages.w},\r\n            "hh": ${packages.hh},\r\n            "weight": ${packages.weight},\r\n            "sizeUnit": "cm",\r\n            "weightUnit": "kg",\r\n            "declaredValue": ${packages.declaredValue}\r\n        }\r\n    ],\r\n    "courier": [\r\n        "${selectedCourier}"]\r\n}`;
-    let raw = `{\r\n    "sender": {\r\n        "name": "${sender.name}",\r\n        "email": "${sender.email}",\r\n        "companyName": "${sender.companyName}",\r\n        "phone": "${sender.phone}",\r\n        "country": "${sender.country}",\r\n        "country_code": "${sender.country_code}",\r\n        "province": "${sender.province}",\r\n        "province_code": "${sender.province_code}",\r\n        "city": "${sender.city}",\r\n        "address1": "${sender.address1}",\r\n        "address2": "${sender.address2}",\r\n        "optionalInfo": "${sender.optionalInfo}",\r\n        "zip": "${sender.zip}"\r\n    },\r\n    "recipient": {\r\n        "name": "${recipient.name}",\r\n        "email": "${recipient.email}",\r\n        "companyName": "${recipient.companyName}",\r\n        "phone": "${recipient.phone}",\r\n        "country": "${recipient.country}",\r\n        "country_code": "${recipient.country_code}",\r\n        "province": "${recipient.province}",\r\n        "province_code": "${recipient.province_code}",\r\n        "city": "${recipient.city}",\r\n        "address1": "${recipient.address1}",\r\n        "address2": "${recipient.address2}",\r\n        "optionalInfo": " 🙂",\r\n        "zip": "${recipient.zip}"\r\n    },\r\n    "packages": [\r\n   ${packagesDetails}     \r\n    ],\r\n    "courier": [\r\n        "${selectedCourier}"]\r\n}`;
+    // let raw = `{\r\n    "sender": {\r\n        "name": "${sender.name}",\r\n        "email": "${sender.email}",\r\n        "companyName": "${sender.companyName}",\r\n        "phone": "${sender.phone}",\r\n        "country": "${sender.country}",\r\n        "country_code": "${sender.country_code}",\r\n        "province": "${sender.province}",\r\n        "province_code": "${sender.province_code}",\r\n        "city": "${sender.city}",\r\n        "address1": "${sender.address1}",\r\n        "address2": "${sender.address2}",\r\n        "optionalInfo": "${sender.optionalInfo}",\r\n        "zip": "${sender.zip}"\r\n    },\r\n    "recipient": {\r\n        "name": "${recipient.name}",\r\n        "email": "${recipient.email}",\r\n        "companyName": "${recipient.companyName}",\r\n        "phone": "${recipient.phone}",\r\n        "country": "${recipient.country}",\r\n        "country_code": "${recipient.country_code}",\r\n        "province": "${recipient.province}",\r\n        "province_code": "${recipient.province_code}",\r\n        "city": "${recipient.city}",\r\n        "address1": "${recipient.address1}",\r\n        "address2": "${recipient.address2}",\r\n        "optionalInfo": " 🙂",\r\n        "zip": "${recipient.zip}"\r\n    },\r\n    "packages": [\r\n   ${packagesDetails}     \r\n    ],\r\n    "courier": [\r\n        "${selectedCourier}"]\r\n}`;
 
     console.log("🧡🧡raw 🧡🧡: ", raw);
 
@@ -359,9 +391,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
 
     let raw = `{\r\n    \"sender\": {\r\n        \"name\": \"${sender.name}\",\r\n        \"email\": \"${sender.email}\",\r\n        \"companyName\": \"${sender.companyName}\",\r\n        \"phone\": \"${sender.phone}\",\r\n        \"country\": \"${sender.country}\",\r\n        \"country_code\": \"${sender.country_code}\",\r\n        \"province\": \"${sender.province}\",\r\n        \"province_code\": \"${sender.province_code}\",\r\n        \"city\": \"${sender.city}\",\r\n        \"address1\": \"${sender.address1}\",\r\n        \"address2\": \"${sender.address2}\",\r\n        \"optionalInfo\":${sender.optionalInfo}\"\",\r\n        \"zip\": \"${sender.zip}\"\r\n    },\r\n    \"recipient\": {\r\n        \"name\": \"${recipient.name}\",\r\n        \"email\": \"${recipient.email}\",\r\n        \"companyName\":"${recipient.companyName}",\r\n        \"phone\": \"${recipient.phone}\",\r\n        \"country\": \"${recipient.country}\",\r\n        \"country_code\": \"${recipient.country_code}\",\r\n        \"province\": \"${recipient.province}\",\r\n        \"province_code\": \"${recipient.province_code}\",\r\n        \"city\": \"${recipient.city}\",\r\n        \"address1\": \"${recipient.address1}\",\r\n        \"address2\": \"${recipient.address2}\",\r\n        \"optionalInfo\":"${recipient.optionalInfo}",\r\n        \"zip\": \"${recipient.zip}\"\r\n    },\r\n    \"selectedService\": {\r\n        \"serviceType\": "${selectedQuote.serviceType}",\r\n        \"serviceName\": \"${selectedQuote.serviceName}\",\r\n        \"courier\": \"${selectedCourier}\"\r\n    },\r\n    \"enabledInsurance\": false,\r\n    \"items\": [\r\n        \r\n  ${bodyProducts} \r\n    ],\r\n    \"packages\": [\r\n        {\r\n            \"h\": 10,\r\n            \"w\": 10,\r\n            \"hh\": 2,\r\n            \"weight\": 1,\r\n            \"sizeUnit\": \"CM\",\r\n            \"weightUnit\": \"KG\",\r\n            \"declaredValue\": 0\r\n        }\r\n    ],\r\n    \"fulfillment\": true,\r\n    \"currency_code\": \"MXN\",\r\n    \"total_amount_insurance\": 0\r\n}`;
 
-    console.log(" 💜");
-    console.log("raw  from new shiptment 💜", raw);
-    console.log(" 💜");
+    // console.log(" 💜");
+    // console.log("raw  from new shiptment 💜", raw);
+    // console.log(" 💜");
 
     fetch(`https://${WESHIP_API}/shipments/createShipment`, {
       method: "POST",
@@ -369,8 +401,30 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       body: raw,
       redirect: "follow",
     })
-      .then((response) => response.text())
-      .then((result) => console.log("this is result 💚", result))
+      .then((response) => {
+        return response.text();
+      })
+      .then((result) => {
+        let parsed = JSON.parse(result);
+        const { data, order_id, success } = parsed;
+        const { trackingNumber, labelsNumber, amount, data: dataArray } = data;
+        console.log("CREATED SHIPMENT this updates packageDetials");
+        setPackagesDetails((prev: any) => {
+          return {
+            ...prev,
+            success: success,
+            order_id: order_id,
+            data: {
+              orderId: order_id,
+              success: success,
+              trackingNumber: trackingNumber,
+              labelsNumber: labelsNumber,
+              amount: amount,
+              dataArray: dataArray,
+            },
+          };
+        });
+      })
       .catch((error) => console.log("error", error));
   };
 

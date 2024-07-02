@@ -29,13 +29,13 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { items, payment_intent_id, shipping } = body;
 
-  console.log("items ", items);
-  console.log("❎ 🟥shipping ❎ 🟥 ", shipping);
-  console.log("payment_intent_id ", payment_intent_id);
-  console.log(
-    "total before converting to cents  ",
-    calculateOrderAmount(items)
-  );
+  // console.log("items ", items);
+  // console.log("❎ 🟥shipping ❎ 🟥 ", shipping);
+  // console.log("payment_intent_id ", payment_intent_id);
+  // console.log(
+  //   "total before converting to cents  ",
+  //   calculateOrderAmount(items)
+  // );
 
   let total = Math.round(calculateOrderAmount(items) * 100 + shipping * 100); // stripe takes payment in cents ????
 
@@ -48,6 +48,7 @@ export async function POST(request: Request) {
     deliveryStatus: "pending",
     paymentIntentId: payment_intent_id,
     products: items,
+    shippingDetails: {},
   };
 
   if (payment_intent_id) {

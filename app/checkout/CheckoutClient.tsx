@@ -8,6 +8,7 @@ import { StripeElementsOptions, loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import Button from "../components/Button";
+import axios from "axios";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -22,8 +23,30 @@ const CheckoutClient: React.FC<CheckoutClientProps> = ({
     useCart();
   const [loading, setLoading] = useState<true | false>(false);
   const [error, setError] = useState<true | false>(false);
+  const [payment_intent_id, setPayment_intent_id] = useState<any>("");
   const [clientSecret, setClientSecret] = useState<string>("");
   const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
+  const [shippingDetailsExist, setShippingDetailsExist] =
+    useState<boolean>(false);
+
+  const [packagesDetails, setPackagesDetails] = useState<any>({
+    success: false,
+    order_id: 0,
+    data: {
+      success: null,
+      trackingNumber: "",
+      labelsNumber: 0,
+      amount: 0,
+      orderId: 0,
+      dataArray: [],
+    },
+  });
+
+  useEffect(() => {
+    console.log("packagesDetails from checkout client 🏂🏂🏂");
+    console.log(packagesDetails);
+  }, [packagesDetails]);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -66,6 +89,43 @@ const CheckoutClient: React.FC<CheckoutClientProps> = ({
     }
   }, [cartProducts, paymentIntent]);
 
+  useEffect(() => {
+    // update  a order with the shipping data
+
+    if (packagesDetails.success === true) {
+      console.log("packagesDetails.success ", packagesDetails.success);
+      setLoading(true);
+      setError(false);
+
+      fetch("/api/update-order-shipping", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          packagesDetails: packagesDetails,
+          payment_intent_id: paymentIntent,
+        }),
+      })
+        .then((res) => {
+          setLoading(false);
+          if (res.status === 401) {
+            return router.push("/login");
+          }
+          if (res.status !== 200) {
+            return router.push("/login");
+          }
+
+          return res.json();
+        })
+        .then((data) => {
+          // console.log("/api/update-order-shipping", data);
+        })
+        .catch((err) => {
+          setError(true);
+          toast.error(err);
+        });
+    }
+  }, [packagesDetails]);
+
   const options: StripeElementsOptions = {
     clientSecret,
     appearance: {
@@ -85,7 +145,11 @@ const CheckoutClient: React.FC<CheckoutClientProps> = ({
               currentUserEmail={currentUserEmail}
               clientSecret={clientSecret}
               handleSetPaymentSuccess={handleSetPaymentSuccess}
+              setPackagesDetails={setPackagesDetails}
+              packagesDetails={packagesDetails}
               loading={loading}
+              shippingDetailsExist={shippingDetailsExist}
+              setShippingDetailsExist={setShippingDetailsExist}
             />
           </Elements>
         )}

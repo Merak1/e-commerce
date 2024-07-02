@@ -39,7 +39,6 @@ model User {
   role Role @default(USER)
 
 
-
   accounts      Account[]
   orders        Order[]
 }
@@ -80,9 +79,26 @@ model Order {
   paymentIntentId String @unique
   products CartProductType[]
   addresses Address?
+  shippingDetails ShippingDetail?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+}
+
+type ShippingDetail  {
+success Boolean?
+data ShippingDetailData?
+order_id Int?
+}
+
+
+type ShippingDetailData {
+// success Boolean
+// orderID Int
+trackingNumber String
+labelsNumber Int
+amount Int
+dataArray  Int[]
 }
 
 enum ProductType  {
