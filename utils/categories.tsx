@@ -5,6 +5,7 @@ import {
   TbNumber13Small,
   TbNumber14Small,
   TbNumber15Small,
+  TbNumber16Small,
   TbNumber1Small,
   TbNumber2Small,
   TbNumber3Small,
@@ -31,6 +32,7 @@ const ACRIGEL = "acrigel";
 const SUBLIMAR = "sublimar";
 const AIRPODS = "airpods";
 const SUBLIMAR_TRANSPARENTE = "sublimar transparente";
+const TERMOS = "termos";
 
 export const categories = [
   CÁMARA_METALICA_COLORES,
@@ -48,6 +50,7 @@ export const categories = [
   SUBLIMAR,
   AIRPODS,
   SUBLIMAR_TRANSPARENTE,
+  TERMOS,
 ];
 
 export const categories1 = {
@@ -66,6 +69,7 @@ export const categories1 = {
   SUBLIMAR: "sublimar",
   AIRPODS: "airpods",
   SUBLIMAR_TRANSPARENTE: "sublimar transparente",
+  TERMOS: "termos",
 };
 
 // export const categories = [
@@ -146,6 +150,10 @@ export const categoryButtons = [
   {
     label: "sublimar transparente",
     icon: TbNumber15Small,
+  },
+  {
+    label: "termos",
+    icon: TbNumber16Small,
   },
 ];
 
