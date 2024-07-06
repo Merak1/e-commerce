@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form";
 import { MdSearch } from "react-icons/md";
 
-const SearchBar = () => {
+interface SearchBarProps {
+  isNavbar: boolean;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ isNavbar }) => {
   const router = useRouter();
   const {
     register,
@@ -30,13 +34,14 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="flex items-center">
+    <div className={` ${isNavbar === true ? "flex items-center" : "w-full"}`}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
-          className="p-2 border border-gray-300
-        rounded-lg focus:outline active:border-jrl
-        focus:border-jrl
-        "
+          className={` ${
+            isNavbar === true
+              ? "p-2 border border-gray-300 rounded-lg focus:outline active:border-jrl focus:border-jrl"
+              : "border-[2px] p-1 text-slate-800 rounded-full border-jrl w-full"
+          }  `}
           autoComplete="off"
           placeholder="Buscar ..."
           type="text"
@@ -45,7 +50,11 @@ const SearchBar = () => {
         />
         <button
           type="submit"
-          className=" hover:opacity:80 text-slate-700 p-2 rounded-md"
+          className={`${
+            isNavbar === true
+              ? "hover:opacity:80 text-slate-700 p-2 rounded-md"
+              : "hidden"
+          }`}
         >
           <MdSearch />
         </button>

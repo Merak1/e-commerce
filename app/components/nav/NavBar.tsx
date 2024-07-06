@@ -75,7 +75,7 @@ const NavBar = async () => {
               </div>
             </div>
             <div className="hidden md:block">
-              <SearchBar />
+              <SearchBar isNavbar={true} />
             </div>
             <div className="flex justify-between gap-8 md:gap-12">
               <CartCount />

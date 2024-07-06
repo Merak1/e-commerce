@@ -6,6 +6,7 @@ import NullData from "@/app/components/NullData";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import SearchDetails from "./SearchDetails";
+import DetailedSearchBar from "./DetailedSearchBar";
 
 const fetcher = async (url: string) => {
   const response = await fetch(url);
@@ -26,10 +27,11 @@ const MdSearch = () => {
       ` /api/search?q=${encodedSearchQuery}`,
       fetcher
     );
-
+    console.log("data is: 😭" + data);
     if (data && data.length === 0) {
       return (
         <div>
+          <DetailedSearchBar />
           <Container>
             <p>There is nothing here...</p>
           </Container>
@@ -38,8 +40,12 @@ const MdSearch = () => {
     }
     if (data) {
       return (
-        <div className="mt-8">
+        <div className="mt-8 text-center">
           <Container>
+            <DetailedSearchBar />
+            <h1 className="text-jrl text-6xl my-4 capitalize bold">
+              {searchQuery}
+            </h1>
             <SearchDetails products={data} />
           </Container>
         </div>

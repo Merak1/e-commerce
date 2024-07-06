@@ -16,7 +16,7 @@ const Categories = () => {
     <div className="bg-white">
       <Container>
         <div
-          className="pt-4 flex flex-row items-center
+          className="pt-4 grid grid-cols-4 items-center
       justify-between flex-wrap"
         >
           {categoryButtons.map((item: any) => {
