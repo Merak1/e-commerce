@@ -51,7 +51,7 @@ const NavBar = async () => {
 
         <div className=" py-4 border-b-[1px]">
           <div
-            className="flex items-center justify-between gap-2 md:gap-0
+            className="flex items-center justify-around gap-2 md:gap-0
           "
           >
             <div className="flex  w-1/3  items-center justify-between benis ">
@@ -74,12 +74,14 @@ const NavBar = async () => {
                 </Link>
               </div>
             </div>
-            <div className="hidden md:block">
+            <div className="hidden md:block w-1/3 ">
               <SearchBar isNavbar={true} />
             </div>
-            <div className="flex justify-between gap-8 md:gap-12">
-              <CartCount />
-              <UserMenu currentUser={currentUser} />
+            <div className="w-1/6">
+              <div className="flex justify-center gap-5 ml-[0px] m-auto">
+                <CartCount />
+                <UserMenu currentUser={currentUser} />
+              </div>
             </div>
           </div>
         </div>

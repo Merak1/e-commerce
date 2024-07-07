@@ -22,7 +22,7 @@ const MdSearch = () => {
   const searchQuery: any = searchParams ? searchParams?.get("q") : null;
   const encodedSearchQuery = encodeURI(searchQuery || "");
 
-  if (searchQuery) {
+  if (searchQuery && searchQuery.length > 0) {
     const { data, error, isLoading } = useSWR(
       ` /api/search?q=${encodedSearchQuery}`,
       fetcher
@@ -30,10 +30,12 @@ const MdSearch = () => {
     console.log("data is: 😭" + data);
     if (data && data.length === 0) {
       return (
-        <div>
-          <DetailedSearchBar />
+        <div className="mt-8 text-center">
           <Container>
-            <p>There is nothing here...</p>
+            <DetailedSearchBar />
+            <div className="p-5">
+              <p>There is nothing here...</p>
+            </div>
           </Container>
         </div>
       );
@@ -52,7 +54,7 @@ const MdSearch = () => {
       );
     }
   }
-  return <NullData title="Searching..." />;
+  return <NullData title="No data..." />;
 };
 
 export default MdSearch;

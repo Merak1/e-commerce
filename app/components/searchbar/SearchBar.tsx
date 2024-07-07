@@ -23,7 +23,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ isNavbar }) => {
 
   const onSubmit = async (data: any) => {
     console.log("data.searchTerm ", data.searchTerm);
-    if (!data.searchTerm) {
+
+    if (!data.searchTerm || data.searchTerm === "") {
       router.push("/");
     }
 
@@ -34,13 +35,18 @@ const SearchBar: React.FC<SearchBarProps> = ({ isNavbar }) => {
   };
 
   return (
-    <div className={` ${isNavbar === true ? "flex items-center" : "w-full"}`}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    // <div
+    //   className={` ${
+    //     isNavbar === true ? " flex justify-center align-middle " : "w-full"
+    //   }`}
+    // >
+    <>
+      <form className=" w-[90%] m-auto flex " onSubmit={handleSubmit(onSubmit)}>
         <input
           className={` ${
             isNavbar === true
-              ? "p-2 border border-gray-300 rounded-lg focus:outline active:border-jrl focus:border-jrl"
-              : "border-[2px] p-1 text-slate-800 rounded-full border-jrl w-full"
+              ? "p-2 border-[2px] w-full border-jrl rounded-full outline-jrl focus:outline active:border-jrl focus:border-jrl"
+              : "border-[2px] p-1 text-slate-800 rounded-full border-jrl w-full outline-jrl focus:outline active:border-jrl focus:border-jrl"
           }  `}
           autoComplete="off"
           placeholder="Buscar ..."
@@ -52,14 +58,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ isNavbar }) => {
           type="submit"
           className={`${
             isNavbar === true
-              ? "hover:opacity:80 text-slate-700 p-2 rounded-md"
+              ? "hover:opacity:80 text-slate-700 p-2 rounded-md relative right-9"
               : "hidden"
           }`}
         >
           <MdSearch />
         </button>
       </form>
-    </div>
+      {/* </div> */}
+    </>
   );
 };
 
