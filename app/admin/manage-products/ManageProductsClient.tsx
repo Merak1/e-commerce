@@ -167,7 +167,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
               icon={MdRemoveRedEye}
               action={"see product details"}
               onClick={() => {
-                router.push(`product/${id}`);
+                router.push(`/product/${id}`);
               }}
             />
             <ActionBtn
