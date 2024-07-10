@@ -44,9 +44,15 @@ export default async function getImages(params: IProductParams) {
       images = [...images, ...product.images];
     });
 
-    // console.log("images 😫", images);
+    console.log("images 😫", images.length);
 
-    return images;
+    let unique = (arr: any[], track = new Set()) =>
+      arr.filter(({ image }) => (track.has(image) ? false : track.add(image)));
+
+    console.log("🧧 unique 🧧", unique(images));
+    console.log("🧧 unique 🧧", unique(images).length);
+
+    return unique(images);
   } catch (error: any) {
     throw new Error(error);
   }

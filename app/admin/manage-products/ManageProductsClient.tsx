@@ -29,15 +29,12 @@ import { getUniqueString } from "@/utils/uniqueString";
 interface ManageProductsClientProps {
   products: Product[] | undefined;
   // images: { color: string; colorCode: string; image: string }[];
-  allDbImages: imagesArray;
+  // allDbImages: imagesArray;
+  allDbImages: any;
 }
 
 export type imagesArray = { color: string; colorCode: string; image: string }[];
-// export const allDbImagesContext = createContext<imagesArray | undefined>(
-//   undefined
-// );
 
-export const allDbImagesContext = createContext<any>(undefined);
 const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   products,
   allDbImages,
@@ -48,7 +45,8 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleOpenEditButton = (selectedProduct: any) => {
-    console.log("modifying selected row ");
+    console.log("🔴 modifying selected row 🔴 ");
+    console.log(selectedProduct);
     setSelectedRow(selectedProduct);
     setOpen(true);
   };
@@ -249,45 +247,47 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
     // console.log("ref ", ref);
   }, []);
   return (
-    <allDbImagesContext.Provider value={allDbImages}>
-      <div className="max-w-[1150px] m-auto text-xl">
-        <div className="mb-4 mt-8">
-          <Heading title="Manage products" center />
+    <div className="max-w-[1150px] m-auto text-xl">
+      <div className="mb-4 mt-8">
+        <Heading title="Manage products" center />
+      </div>
+      <Modal
+        ref={customRef}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <div ref={customRef} className="bg-backgroundYellow mt-5">
+          <UpdateProduct
+            formValues={selectedRow}
+            key={getUniqueString(8)}
+            allDbImages={allDbImages}
+          />
         </div>
-        <Modal
-          ref={customRef}
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <div ref={customRef} className="bg-backgroundYellow mt-5">
-            <UpdateProduct formValues={selectedRow} key={getUniqueString(8)} />
-          </div>
-        </Modal>
-        {/* <UpdateProductModal
+      </Modal>
+      {/* <UpdateProductModal
           open={open}
           handleClose={handleClose}
           selectedRow={selectedRow}
 
         /> */}
-        <div style={{ height: 600, width: "100%" }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 9 },
-              },
-            }}
-            pageSizeOptions={[9, 10]}
-            // checkboxSelection
-            disableRowSelectionOnClick
-            rowHeight={90}
-          />
-        </div>
+      <div style={{ height: 600, width: "100%" }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 9 },
+            },
+          }}
+          pageSizeOptions={[9, 10]}
+          // checkboxSelection
+          disableRowSelectionOnClick
+          rowHeight={90}
+        />
       </div>
-    </allDbImagesContext.Provider>
+    </div>
   );
 };
 

@@ -24,6 +24,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import DataListInput from "@/app/components/inputs/DataListInput";
 import { getUniqueString } from "@/utils/uniqueString";
+import ImageViewer from "@/app/components/imageViewer/ImageViewerUpdate";
+import AccordionComponent from "@/app/components/accordion/AccordionComponent";
+import { imagesArray } from "../manage-products/ManageProductsClient";
+import { createContext } from "react";
+import ImageViewerAdd from "@/app/components/imageViewer/ImageViewerAdd";
 
 export type ImageType = {
   color: string;
@@ -38,14 +43,24 @@ export type UplodedImageType = {
 
 interface AddProductFormProps {
   formValues?: any;
+  allDbImages: imagesArray;
 }
+export const allDbImagesContextAdd = createContext<any>(undefined);
 
-const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
+const AddProductForm: React.FC<AddProductFormProps> = ({
+  formValues,
+  allDbImages,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<ImageType[] | null>(null);
   const [isProductCreated, setIsProductCreated] = useState(false);
   const [imagesUrls, setImagesUrls] = useState<any>();
   const router = useRouter();
+
+  useEffect(() => {
+    console.log("⚫⚪ allDbImages ⚫⚪", allDbImages);
+  }, [allDbImages]);
+
   const {
     name: defaultName,
     description: defaultDescription,
@@ -175,14 +190,46 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
     setIsLoading(true);
     let updloadedImages: UplodedImageType[] = [];
 
+    if (!data.price) {
+      setIsLoading(false);
+      return toast.error("Price is not selected");
+    }
+    if (!data.name) {
+      setIsLoading(false);
+      return toast.error("Name is not selected");
+    }
+    if (!data.description) {
+      setIsLoading(false);
+      return toast.error("Description is not selected");
+    }
+    if (!data.brand) {
+      setIsLoading(false);
+      return toast.error("Brand is not selected");
+    }
     if (!data.category) {
       setIsLoading(false);
       return toast.error("Category is not selected");
     }
-    // if (!data.price) {
+    if (!data.inStock) {
+      setIsLoading(false);
+      return toast.error("Instock is not selected");
+    }
+    if (!data.sku) {
+      setIsLoading(false);
+      return toast.error("Sku is not selected");
+    }
+    // if (!data.model) {
     //   setIsLoading(false);
-    //   return toast.error("Price is not selected");
+    //   return toast.error("Model is not selected");
     // }
+    if (!data.packageInfo) {
+      setIsLoading(false);
+      return toast.error("Packageinfo is not selected");
+    }
+    if (!data.productType) {
+      setIsLoading(false);
+      return toast.error("Producttype is not selected");
+    }
 
     if (!data.images || data.images.length === 0) {
       setIsLoading(false);
@@ -197,7 +244,8 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
           if (item.image) {
             // console.log("item.image: 💀💀💀💀" + item);
             console.log(`${item.image.name}   ---💀💀💀💀`);
-            const fileName = new Date().getTime() + "-" + item.image.name;
+            // const fileName = new Date().getTime() + "-" + item.image.name;
+            const fileName = item.image.name;
             const storage = getStorage(FirebaseApp);
             const storageRef = ref(storage, `prodcuts/${fileName}`);
             const uploadTask = uploadBytesResumable(storageRef, item.image);
@@ -278,58 +326,59 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
   };
   return (
     <>
-      <Heading title="Add a product" center />
-      {/* <div className=" max-w-3xl m-auto flex"> */}
-      <div className="m-auto flex p-3 gap-3">
-        <div className="w-1/3">
-          <Input
-            id="name"
-            label="Name"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-          />
-          <TextArea
-            id="description"
-            label="description"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-          />
-          <Input
-            id="price"
-            label="price"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-            type="number"
-          />
-          <Input
-            id="brand"
-            label="brand"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-          />
+      <allDbImagesContextAdd.Provider value={allDbImages}>
+        <Heading title="Add a product" center />
+        {/* <div className=" max-w-3xl m-auto flex"> */}
+        <div className="m-auto flex p-3 gap-3">
+          <div className="w-1/3">
+            <Input
+              id="name"
+              label="Name"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+            />
+            <TextArea
+              id="description"
+              label="description"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+            />
+            <Input
+              id="price"
+              label="price"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+              type="number"
+            />
+            <Input
+              id="brand"
+              label="brand"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+            />
 
-          <Input
-            id="sku"
-            label="sku"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-          />
+            <Input
+              id="sku"
+              label="sku"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+            />
 
-          <CustomCheckBox
-            id="inStock"
-            label="This product is in stock"
-            disabled={isLoading}
-            register={register}
-          />
-        </div>
-        <div className="w-1/3 font-medium ">
-          <div className="mb-2 font-semibold ">Select a Category</div>
-          {/* <div className="grid grid-cols-2 md:grid-cols-5 gap-1  overflow-auto">
+            <CustomCheckBox
+              id="inStock"
+              label="This product is in stock"
+              disabled={isLoading}
+              register={register}
+            />
+          </div>
+          <div className="w-1/3 font-medium ">
+            <div className="mb-2 font-semibold ">Select a Category</div>
+            {/* <div className="grid grid-cols-2 md:grid-cols-5 gap-1  overflow-auto">
             {categoryButtons.map((item) => {
               return (
                 <div key={item.label} className="col-span">
@@ -345,77 +394,77 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
             })}
           </div> */}
 
-          <DataListInput
-            data={categoryButtons}
-            register={register}
-            id="Category"
-            errors={errors}
-            onClick={(category: any) => setCustomValue("category", category)}
-            onChange={onChangeCategory}
-          />
+            <DataListInput
+              data={categoryButtons}
+              register={register}
+              id="Category"
+              errors={errors}
+              onClick={(category: any) => setCustomValue("category", category)}
+              onChange={onChangeCategory}
+            />
 
-          <div className="w-[80%] m-auto">
-            <Input
-              id="packageInfo.h"
-              label="height h (alto cm)"
-              disabled={isLoading}
-              register={register}
-              type="number"
-              errors={errors}
-              valueAsNumber={true}
-            />
-            <Input
-              id="packageInfo.w"
-              label="width w (ancho cm)"
-              disabled={isLoading}
-              register={register}
-              type="number"
-              errors={errors}
-              valueAsNumber={true}
-            />
-            <Input
-              id="packageInfo.hh"
-              label="depth hh (profundidad cm)"
-              disabled={isLoading}
-              register={register}
-              type="number"
-              errors={errors}
-              valueAsNumber={true}
-            />
-            <Input
-              id="packageInfo.declaredValue"
-              label="declared value (valor declarado)"
-              disabled={isLoading}
-              register={register}
-              type="number"
-              errors={errors}
-              valueAsNumber={true}
-            />
-          </div>
-          <div className="m-auto ">
-            <p>Select product type</p>
+            <div className="w-[80%] m-auto">
+              <Input
+                id="packageInfo.h"
+                label="height h (alto cm)"
+                disabled={isLoading}
+                register={register}
+                type="number"
+                errors={errors}
+                valueAsNumber={true}
+              />
+              <Input
+                id="packageInfo.w"
+                label="width w (ancho cm)"
+                disabled={isLoading}
+                register={register}
+                type="number"
+                errors={errors}
+                valueAsNumber={true}
+              />
+              <Input
+                id="packageInfo.hh"
+                label="depth hh (profundidad cm)"
+                disabled={isLoading}
+                register={register}
+                type="number"
+                errors={errors}
+                valueAsNumber={true}
+              />
+              <Input
+                id="packageInfo.declaredValue"
+                label="declared value (valor declarado)"
+                disabled={isLoading}
+                register={register}
+                type="number"
+                errors={errors}
+                valueAsNumber={true}
+              />
+            </div>
+            <div className="m-auto ">
+              <p>Select product type</p>
 
-            <div className="flex justify-center">
-              {productTypes &&
-                productTypes.map((productType) => {
-                  return (
-                    <div key={productType} className="flex flex-col m-2 ">
-                      <h1>{productType} </h1>
-                      <input
-                        className="cursor-pointer"
-                        type="radio"
-                        value={productType}
-                        {...register("productType")}
-                      />
-                    </div>
-                  );
-                })}
+              <div className="flex justify-center">
+                {productTypes &&
+                  productTypes.map((productType) => {
+                    return (
+                      <div key={productType} className="flex flex-col m-2 ">
+                        <h1>{productType} </h1>
+                        <input
+                          className="cursor-pointer"
+                          type="radio"
+                          value={productType}
+                          {...register("productType")}
+                        />
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="w-1/3 flex flex-col flex-wrap gap-4">
-          <div>
+          <div className="w-1/3 flex flex-col flex-wrap gap-4">
+            {/* <div>
             <div className="font-bold">Select available colors</div>
             <div className="text-sm">Please select all available colors</div>
           </div>
@@ -431,13 +480,38 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ formValues }) => {
                 />
               );
             })}
+          </div> */}
+
+            <ImageViewerAdd
+              // existingImage={existingImage}
+              addImageToState={addImageToState}
+              removeImageFromState={removeImageFromState}
+            />
+
+            <div className="">
+              <AccordionComponent title={"Add new images"}>
+                <div className=" grid grid-cols-2 gap-2">
+                  {productColors.map((item, index) => {
+                    return (
+                      <ColorSelector
+                        key={index + getUniqueString(2)}
+                        item={item}
+                        addImageToState={addImageToState}
+                        removeImageFromState={removeImageFromState}
+                        isProductCreated={isProductCreated}
+                      />
+                    );
+                  })}
+                </div>
+              </AccordionComponent>
+            </div>
           </div>
         </div>
-      </div>
-      <Button
-        label={isLoading ? "Loading" : "Add Product"}
-        onClick={handleSubmit(onSubmit)}
-      />
+        <Button
+          label={isLoading ? "Loading" : "Add Product"}
+          onClick={handleSubmit(onSubmit)}
+        />
+      </allDbImagesContextAdd.Provider>
     </>
   );
 };

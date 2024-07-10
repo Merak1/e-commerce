@@ -7,11 +7,12 @@ import {
   LinearScale,
   BarElement,
 } from "chart.js";
-import { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import useSWR from "swr";
 import CustomCheckBox from "../components/inputs/CustomCheckBoxs";
 import { useForm } from "react-hook-form";
+export const allDbImagesContext = createContext<any>(undefined);
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
@@ -23,8 +24,12 @@ const fetcher = async (url: string) => {
   }
   return response.json();
 };
+interface BarGraphProps {
+  allDbImages: any;
+}
 
-const BarGraph = () => {
+const BarGraph: React.FC<BarGraphProps> = ({ allDbImages }) => {
+  // const BarGraph = () => {
   const {
     register,
     watch,
@@ -34,6 +39,11 @@ const BarGraph = () => {
       days: 6,
     },
   });
+
+  useEffect(() => {
+    console.log("🍓 allDbImages", allDbImages);
+  }, [allDbImages]);
+
   const [days, setDays] = useState(6);
   const { data, isLoading } = useSWR(`/api/graph-data?days=${days}`, fetcher);
   // const isLoading = true;
@@ -69,6 +79,7 @@ const BarGraph = () => {
   };
 
   return (
+    // <allDbImagesContext.Provider value={allDbImages}>
     <div className="mt-4 mx-auto max-w[11150px]  ">
       <form>
         <div className="flex flex-row mx-auto justify-center gap-6">
@@ -122,6 +133,7 @@ const BarGraph = () => {
         <Bar data={chartData} options={options}></Bar>
       )}
     </div>
+    // </allDbImagesContext.Provider>
   );
 };
 

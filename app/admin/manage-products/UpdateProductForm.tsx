@@ -7,6 +7,7 @@ import Input from "@/app/components/inputs/Input";
 import { categoryButtons } from "@/utils/categories";
 import { productColors } from "@/utils/productsColors";
 import {
+  createContext,
   JSXElementConstructor,
   PromiseLikeOfReactNode,
   ReactElement,
@@ -33,7 +34,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import DataListInput from "@/app/components/inputs/DataListInput";
 import AccordionComponent from "@/app/components/accordion/AccordionComponent";
-import ImageViewer from "@/app/components/imageViewer/ImageView";
+import ImageViewer from "@/app/components/imageViewer/ImageViewerUpdate";
 import { getUniqueString } from "@/utils/uniqueString";
 import Image from "next/image";
 import { MdDelete } from "react-icons/md";
@@ -54,18 +55,25 @@ export type UplodedImageType = {
 
 interface UpdateProductFormProps {
   formValues?: any;
+  allDbImages: any;
 }
+export const allDbImagesContextUpdate = createContext<any>(undefined);
 
 const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
   formValues,
+  allDbImages,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [stateImage, setStateImage] = useState();
   const [images, setImages] = useState<ImageType[] | null>(null);
   const [isProductCreated, setIsProductCreated] = useState(false);
   const [imagesUrls, setImagesUrls] = useState<any>();
-  const [modifiedImagesUrls, setModifiedImagesUrls] = useState<any>();
   const [selectedImagesFromDB, setSelectedImagesFromDB] = useState([]);
+  const [modifiedImagesUrls, setModifiedImagesUrls] = useState<any>();
+  const [existingImage, setExistingImage] = useState<any>();
+  const productTypes = ["THERMOS", "CASE"];
+
+  const { id } = formValues;
   const router = useRouter();
   const {
     name: defaultName,
@@ -77,9 +85,11 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
     images: defaultImages,
     sku: defaultSku,
     model: defaultModel,
+    packageInfo: defaultPackageInfo,
+    productType: defaultProductType,
   } = formValues || {};
   // console.log("defaultImages 🦗", defaultImages);
-  // console.log("formValues 🦗😀🦗😀🦗😀", formValues);
+  // console.log("id 🦗😀🦗😀🦗😀", id);
   const {
     register,
     handleSubmit,
@@ -98,6 +108,14 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
       images: [],
       sku: "",
       model: "",
+      productType: "",
+      packageInfo: {
+        h: 0,
+        w: 0,
+        hh: 0,
+        weight: 0,
+        declaredValue: 0,
+      },
       // sale: false,
     },
   });
@@ -105,6 +123,11 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
   // useEffect(() => {
   //   console.log("stateImage 🔻", stateImage);
   // }, [stateImage]);
+
+  useEffect(() => {
+    // setExistingImage()
+    console.log("existingImage 😃", existingImage);
+  }, [existingImage]);
   useEffect(() => {
     // useForm(formValues);
     if (formValues !== undefined) {
@@ -121,20 +144,25 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
       setCustomValue("model", defaultModel);
       // console.log("defaultImages", defaultImages);
       setStateImage(defaultImages);
+
+      setExistingImage(defaultImages);
     }
   }, [formValues]);
   // console.log("formValues", formValues);
 
   const category = watch("category");
-  // useEffect(() => {
-  //   console.log("images 🟠", images);
-  //   console.log("imagesUrls 🟡", imagesUrls);
-  // }, [images, imagesUrls]);
+  useEffect(() => {
+    console.log("images 🟠", images);
+    console.log("imagesUrls 🟡", imagesUrls);
+  }, [images, imagesUrls]);
 
-  // useEffect(() => {
-  //   setCustomValue("images", images);
-  //   console.log("IMAGES", images);
-  // }, [images]);
+  useEffect(() => {
+    setCustomValue("images", images);
+    console.log(
+      "IMAGES that are going to becone the new image for the product",
+      images
+    );
+  }, [images]);
 
   useEffect(() => {
     if (isProductCreated) {
@@ -231,207 +259,297 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
       //saber si se agarró una imagen de la lista o se subió una nueva
     }
 
-    // setIsLoading(true);
-    // let updloadedImages: UplodedImageType[] = [];
+    setIsLoading(true);
+    let updloadedImages: UplodedImageType[] = [];
+    let notUploadedImages: any = [];
 
-    // if (!data.category) {
+    if (!data.category) {
+      setIsLoading(false);
+      return toast.error("Category is not selected");
+    }
+    // if (!data.price) {
     //   setIsLoading(false);
-    //   return toast.error("Category is not selected");
-    // }
-    // // if (!data.price) {
-    // //   setIsLoading(false);
-    // //   return toast.error("Price is not selected");
-    // // }
-
-    // if (!data.images || data.images.length === 0) {
-    //   setIsLoading(false);
-    //   return toast.error("Images are not selected");
+    //   return toast.error("Price is not selected");
     // }
 
-    // const handleImageUploads = async () => {
-    //   toast("Creating product...");
+    if (!data.images || data.images.length === 0) {
+      setIsLoading(false);
+      return toast.error("Images are not selected");
+    }
 
-    //   try {
-    //     for (const item of data.images) {
-    //       if (item.image) {
-    //         // console.log("item.image: 💀💀💀💀" + item);
-    //         console.log(`${item.image.name}   ---💀💀💀💀`);
-    //         const fileName = new Date().getTime() + "-" + item.image.name;
-    //         const storage = getStorage(FirebaseApp);
-    //         const storageRef = ref(storage, `prodcuts/${fileName}`);
-    //         const uploadTask = uploadBytesResumable(storageRef, item.image);
+    const handleImageUploads = async () => {
+      toast("Creating product...");
 
-    //         await new Promise<void>((resolve, reject) => {
-    //           uploadTask.on(
-    //             "state_changed",
-    //             (snapshot) => {
-    //               // Observe state change events such as progress, pause, and resume
-    //               // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-    //               const progress =
-    //                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //               console.log("Upload is " + progress + "% done");
-    //               switch (snapshot.state) {
-    //                 case "paused":
-    //                   console.log("Upload is paused");
-    //                   break;
-    //                 case "running":
-    //                   console.log("Upload is running");
-    //                   break;
-    //               }
-    //             },
-    //             (error) => {
-    //               // Handle unsuccessful uploads
-    //               toast.error(
-    //                 "Error uploading image, please try again: " + error
-    //               );
-    //             },
-    //             () => {
-    //               getDownloadURL(uploadTask.snapshot.ref)
-    //                 .then((downloadURL: string) => {
-    //                   updloadedImages.push({
-    //                     ...item,
-    //                     image: downloadURL,
-    //                   });
-    //                   console.log("File available at", downloadURL);
-    //                   resolve();
-    //                 })
-    //                 .catch((error: any) => {
-    //                   toast.error(
-    //                     "Error uploading image, please try again: " + error
-    //                   );
-    //                   console.log("Error getting the download URL", error);
-    //                   reject(error);
-    //                 });
-    //             }
-    //           );
-    //         });
-    //         //end of promise
-    //       } //end of if item.image
-    //     } //end of for const in item
-    //   } catch (error) {
-    //     setIsLoading(false);
-    //     console.log("Error handling image uploads", error);
-    //     toast.error("Error handling image uploads");
-    //   }
-    // };
+      try {
+        for (const item of data.images) {
+          // console.log("item in data.images", item);
+          // if (item.image || item.image.name !== "undefined") {
+          if (typeof item.image === "string" || item.image instanceof String) {
+            notUploadedImages.push({
+              ...item,
+            });
+          } else {
+            // console.log("item.image: 💀💀💀💀" + item);
+            // console.log(`${item.image.name}   ---💀💀💀💀`);
+            // console.log(`${typeof item.image.name}   ---💀💀💀💀`);
+            // const fileName = new Date().getTime() + "-" + item.image.name;
+            const fileName = item.image.name;
+            const storage = getStorage(FirebaseApp);
+            const storageRef = ref(storage, `prodcuts/${fileName}`);
+            const uploadTask = uploadBytesResumable(storageRef, item.image);
+
+            await new Promise<void>((resolve, reject) => {
+              uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                  // Observe state change events such as progress, pause, and resume
+                  // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                  const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                  // console.log("Upload is " + progress + "% done");
+                  switch (snapshot.state) {
+                    case "paused":
+                      // console.log("Upload is paused");
+                      break;
+                    case "running":
+                      // console.log("Upload is running");
+                      break;
+                  }
+                },
+                (error) => {
+                  // Handle unsuccessful uploads
+                  toast.error(
+                    "Error uploading image, please try again: " + error
+                  );
+                },
+                () => {
+                  getDownloadURL(uploadTask.snapshot.ref)
+                    .then((downloadURL: string) => {
+                      updloadedImages.push({
+                        ...item,
+                        image: downloadURL,
+                      });
+                      console.log("File available at", downloadURL);
+                      resolve();
+                    })
+                    .catch((error: any) => {
+                      toast.error(
+                        "Error uploading image, please try again: " + error
+                      );
+                      console.log("Error getting the download URL", error);
+                      reject(error);
+                    });
+                }
+              );
+            });
+            //end of promise
+          } //end of if item.image
+        } //end of for const in item
+      } catch (error) {
+        setIsLoading(false);
+        console.log("Error handling image uploads", error);
+        toast.error("Error handling image uploads");
+      }
+    };
     // //TODO save product to mongo
 
-    // await handleImageUploads();
-    // const productData = { ...data, images: updloadedImages };
-    // setImagesUrls(updloadedImages);
-    // console.log("PRoduct data: " + productData);
+    await handleImageUploads();
 
-    // axios
-    //   .post("/api/product", productData)
-    //   .then(() => {
-    //     toast.success("Product created successfully");
-    //     setIsProductCreated(true);
-    //     router.refresh();
-    //   })
-    //   .catch((error: any) => {
-    //     toast.error("Something went wrong please try again", error);
-    //   })
-    //   .finally(() => {
-    //     setIsLoading(false);
-    //   });
+    // console.log("imagesNotFromUpdate ⚪ ", imagesNotFromUpdate);
+    const productDataImages = [...updloadedImages, ...notUploadedImages];
+    console.log("🟣🟣🟣🟣🟣productDataImages 🟣🟣🟣🟣🟣🟣 ", productDataImages);
+    // const productDataImages = { ...updloadedImages, ...imagesNotFromUpdate };
+    const productData = { ...data, images: productDataImages };
+    // // const productDataWithUpload = { ...data, images: images  };
+    setImagesUrls(updloadedImages);
+
+    console.log("updloadedImages 🟣🟢🟣 ", updloadedImages);
+    console.log("notUploadedImages 🟣🟠🟣 ", notUploadedImages);
+
+    console.log(productData);
+
+    //TODO UPDATE ENDPOINT WORKS
+    axios
+      .put(`/api/product/${id}`, {
+        id,
+        productData,
+      })
+      .then((response) => {
+        toast.success("Product Updated Successfully");
+        router.refresh();
+      })
+      .catch((error) => {
+        toast.error("Oops! Failed to update product");
+        console.log(error);
+      });
   };
   return (
     <>
-      <Heading title="Update a product" center />
-      <div className="m-auto flex p-3 gap-3">
-        <div className="w-1/3">
-          <Input
-            id="name"
-            label="Name"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-          />
-          <TextArea
-            id="description"
-            label="description"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-          />
-          <Input
-            id="price"
-            label="price"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-            type="number"
-          />
-          <Input
-            id="brand"
-            label="brand"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-          />
+      <allDbImagesContextUpdate.Provider value={allDbImages}>
+        <Heading title="Update a product" center />
+        <div className="m-auto flex p-3 gap-3">
+          <div className="w-1/3">
+            <Input
+              id="name"
+              label="Name"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+            />
+            <TextArea
+              id="description"
+              label="description"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+            />
+            <Input
+              id="price"
+              label="price"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+              type="number"
+            />
+            <Input
+              id="brand"
+              label="brand"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+            />
 
-          <Input
-            id="sku"
-            label="sku"
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-          />
+            <Input
+              id="sku"
+              label="sku"
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+            />
 
-          <CustomCheckBox
-            id="inStock"
-            label="This product is in stock"
-            disabled={isLoading}
-            register={register}
-          />
-        </div>
-        <div className="w-1/3 font-medium ">
-          <div className="mb-2 font-semibold ">Select a Category</div>
-          <DataListInput
-            data={categoryButtons}
-            register={register}
-            id="Category"
-            errors={errors}
-            label={formValues.category}
-            onClick={(category: any) => setCustomValue("category", category)}
-            onChange={onChangeCategory}
-          />
+            <CustomCheckBox
+              id="inStock"
+              label="This product is in stock"
+              disabled={isLoading}
+              register={register}
+            />
+          </div>
+          <div className="w-1/3 font-medium ">
+            <div className="mb-2 font-semibold ">Select a Category</div>
+            <DataListInput
+              data={categoryButtons}
+              register={register}
+              id="Category"
+              errors={errors}
+              label={formValues.category}
+              onClick={(category: any) => setCustomValue("category", category)}
+              onChange={onChangeCategory}
+            />
 
-          <ImageViewer />
-        </div>
+            {/* <ImageViewer
+            existingImage={existingImage}
+            addImageToState={addImageToState}
+            removeImageFromState={removeImageFromState}
+          /> */}
 
-        <div className="w-1/3 flex flex-col flex-wrap gap-4">
-          {/* <div>
+            <div className="w-[80%] m-auto">
+              <Input
+                id="packageInfo.h"
+                label="height h (alto cm)"
+                disabled={isLoading}
+                register={register}
+                type="number"
+                errors={errors}
+                valueAsNumber={true}
+              />
+              <Input
+                id="packageInfo.w"
+                label="width w (ancho cm)"
+                disabled={isLoading}
+                register={register}
+                type="number"
+                errors={errors}
+                valueAsNumber={true}
+              />
+              <Input
+                id="packageInfo.hh"
+                label="depth hh (profundidad cm)"
+                disabled={isLoading}
+                register={register}
+                type="number"
+                errors={errors}
+                valueAsNumber={true}
+              />
+              <Input
+                id="packageInfo.declaredValue"
+                label="declared value (valor declarado)"
+                disabled={isLoading}
+                register={register}
+                type="number"
+                errors={errors}
+                valueAsNumber={true}
+              />
+            </div>
+            <div className="m-auto ">
+              <p>Select product type</p>
+
+              <div className="flex justify-center">
+                {productTypes &&
+                  productTypes.map((productType) => {
+                    return (
+                      <div key={productType} className="flex flex-col m-2 ">
+                        <h1>{productType} </h1>
+                        <input
+                          className="cursor-pointer"
+                          type="radio"
+                          value={productType}
+                          {...register("productType")}
+                        />
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+
+          <div className="w-1/3 flex flex-col flex-wrap gap-4">
+            {/* <div>
             <DeleteProductExistingImages
               images={images}
               formValues={formValues}
               selectForDelete={selectForDelete}
             />
           </div> */}
+            <ImageViewer
+              existingImage={existingImage}
+              addImageToState={addImageToState}
+              removeImageFromState={removeImageFromState}
+            />
 
-          <div className="">
-            <AccordionComponent title={"Add new images"}>
-              <div className=" grid grid-cols-2 gap-2">
-                {productColors.map((item, index) => {
-                  return (
-                    <ColorSelector
-                      key={index + getUniqueString(2)}
-                      item={item}
-                      addImageToState={addImageToState}
-                      removeImageFromState={removeImageFromState}
-                      isProductCreated={isProductCreated}
-                    />
-                  );
-                })}
-              </div>
-            </AccordionComponent>
+            <div className="">
+              <AccordionComponent title={"Add new images"}>
+                <div className=" grid grid-cols-2 gap-2">
+                  {productColors.map((item, index) => {
+                    return (
+                      <ColorSelector
+                        key={index + getUniqueString(2)}
+                        item={item}
+                        addImageToState={addImageToState}
+                        removeImageFromState={removeImageFromState}
+                        isProductCreated={isProductCreated}
+                      />
+                    );
+                  })}
+                </div>
+              </AccordionComponent>
+            </div>
           </div>
         </div>
-      </div>
-      <Button
-        label={isLoading ? "Loading" : "Update Product"}
-        onClick={handleSubmit(onSubmit)}
-      />
+        <Button
+          label={isLoading ? "Loading" : "Update Product"}
+          onClick={handleSubmit(onSubmit)}
+        />
+      </allDbImagesContextUpdate.Provider>
     </>
   );
 };

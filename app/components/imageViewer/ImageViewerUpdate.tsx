@@ -1,5 +1,10 @@
-import { SetStateAction, useContext, useEffect, useState } from "react";
-import { allDbImagesContext } from "../../admin/manage-products/ManageProductsClient";
+import React, {
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   Controller,
   FieldValues,
@@ -7,35 +12,45 @@ import {
   useForm,
 } from "react-hook-form";
 
-import ImagePreview from "./ImagePreview";
-import Input from "../inputs/Input";
-import Button from "../Button";
-import CustomImageList from "../imageList/ImageList";
+import CustomImageList from "../imageList/CustomImageList";
 import AccordionComponent from "../accordion/AccordionComponent";
+import { allDbImagesContextUpdate } from "@/app/admin/manage-products/UpdateProductForm";
 
-const ImageViewer = () => {
-  const allDbImages = useContext(allDbImagesContext);
+interface ImageViewerProps {
+  addImageToState: any;
+  removeImageFromState: any;
+  existingImage?: any;
+}
+const ImageViewer: React.FC<ImageViewerProps> = ({
+  removeImageFromState,
+  addImageToState,
+  existingImage,
+}) => {
+  const allDbImages = useContext(allDbImagesContextUpdate);
+
   const [isLoading, setIsLoading] = useState(false);
   const { handleSubmit, control } = useForm<FormValues>();
   const [inputValue, setInputValue] = useState("");
+  // const [images, setImages] = useState<ImageType[] | null>(null);
+
   const [debouncedInputValue, setDebouncedInputValue] = useState("");
   type FormValues = {
     inputSearch: string;
   };
 
+  // useEffect(() => {
+  //   console.log("images from state", images);
+  // }, [images]);
+  console.log("allDbImages 🎪", allDbImages);
+
+  useEffect(() => {
+    console.log(" --------🈁 allDbImages 🈁------");
+    console.log(allDbImages);
+  }, [allDbImages]);
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     console.log("Product data from image view", data);
   };
-
-  const testShowMultipleImages = [
-    //delete me
-    ...allDbImages,
-    ...allDbImages,
-    ...allDbImages,
-    ...allDbImages,
-    // ...allDbImages,
-    // ...allDbImages,
-  ];
 
   useEffect(() => {
     const delayInputTimeoutId = setTimeout(() => {
@@ -57,7 +72,6 @@ const ImageViewer = () => {
 
   return (
     <div className="bg-slate-300 p-4 m-2">
-      {/* <p>Search existing images</p> */}
       <AccordionComponent title={"Search for existing images"}>
         <form onSubmit={handleSubmit((data) => console.log(data))}>
           <Controller
@@ -97,29 +111,15 @@ const ImageViewer = () => {
             )}
           />
 
-          {allDbImages.length === 0 ? (
+          {allDbImages?.length === 0 ? (
             <div className="">there are no images</div>
           ) : (
-            <CustomImageList itemData={testShowMultipleImages} />
-
-            // allDbImages?.map(
-            //   (dbImage: { color: string; colorCode: string; image: string }) => {
-            //     const { color, colorCode, image } = dbImage;
-            //     // console.log("image: " + image);
-            //     // console.log(color);
-            //     // console.log(colorCode);
-            //     // console.log(image);
-            //     return (
-            //       <div>
-            //         <ImagePreview
-            //           color={color}
-            //           colorCode={colorCode}
-            //           image={image}
-            //         />
-            //       </div>
-            //     );
-            //   }
-            // )
+            <CustomImageList
+              existingImage={existingImage}
+              itemData={allDbImages}
+              addImageToState={addImageToState}
+              removeImageFromState={removeImageFromState}
+            />
           )}
         </form>
       </AccordionComponent>

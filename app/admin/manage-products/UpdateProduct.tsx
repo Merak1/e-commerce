@@ -6,8 +6,12 @@ import UpdateProductForm from "./UpdateProductForm";
 
 interface UpdateProductProps {
   formValues: any;
+  allDbImages: any;
 }
-const UpdateProduct: React.FC<UpdateProductProps> = ({ formValues }) => {
+const UpdateProduct: React.FC<UpdateProductProps> = ({
+  formValues,
+  allDbImages,
+}) => {
   const {
     name,
     description,
@@ -18,6 +22,7 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ formValues }) => {
     images,
     sku,
     model,
+    id,
   } = formValues;
   // console.log("name : 😢 " + name);
   // console.log("description : 😢 " + description);
@@ -41,9 +46,10 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({ formValues }) => {
     images: [...images],
     sku: sku,
     model: model,
+    id,
   };
 
-  return <UpdateProductForm formValues={data} />;
+  return <UpdateProductForm formValues={data} allDbImages={allDbImages} />;
 };
 
 export default UpdateProduct;
