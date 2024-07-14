@@ -12,7 +12,7 @@ export async function PUT(request: Request) {
       }
 
       const { payment_intent_id, packagesDetails: shippingDetails } = body;
-      const { success, order_id, data } = shippingDetails;
+      const { success, order_id, data, courier } = shippingDetails;
       const { orderId, trackingNumber, labelsNumber, amount, dataArray } = data;
 
       const order = await prisma.order.update({
@@ -21,6 +21,7 @@ export async function PUT(request: Request) {
           shippingDetails: {
             success: success,
             order_id: order_id,
+            courier: courier,
             data: {
               trackingNumber: trackingNumber,
               labelsNumber: labelsNumber,

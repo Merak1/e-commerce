@@ -32,6 +32,7 @@ const CheckoutClient: React.FC<CheckoutClientProps> = ({
   const [packagesDetails, setPackagesDetails] = useState<any>({
     success: false,
     order_id: 0,
+    courier: "",
     data: {
       success: null,
       trackingNumber: "",

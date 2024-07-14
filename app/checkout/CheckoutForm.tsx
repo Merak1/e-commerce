@@ -414,6 +414,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             ...prev,
             success: success,
             order_id: order_id,
+            courier: selectedCourier,
             data: {
               orderId: order_id,
               success: success,
