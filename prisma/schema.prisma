@@ -89,6 +89,7 @@ type ShippingDetail  {
 success Boolean?
 data ShippingDetailData?
 order_id Int?
+courier String
 }
 
 
