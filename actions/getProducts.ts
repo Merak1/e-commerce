@@ -35,6 +35,9 @@ export default async function getProducts(params: IProductParams) {
           },
         ],
       },
+      include: {
+        images: true,
+      },
       //   include: { // TODO
       //     reviews: { // ofertas
       //         include: {
