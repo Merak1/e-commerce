@@ -34,6 +34,9 @@ export default async function getProductByQuery(params: string) {
           },
         ],
       },
+      include: {
+        images: true,
+      },
     });
 
     if (!product) {

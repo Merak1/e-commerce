@@ -7,6 +7,9 @@ export default async function getProductsById(params: string) {
       where: {
         id: productId,
       },
+      include: {
+        images: true,
+      },
     });
 
     if (!product) {
