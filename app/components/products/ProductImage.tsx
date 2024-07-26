@@ -56,7 +56,7 @@ const ProductImage: React.FC<ProductImageProps> = ({
       <div className="col-span-5 relative aspect-square">
         <Image
           src={cartProduct.selectedImage.image}
-          alt={cartProduct.selectedImage.color}
+          alt={cartProduct.selectedImage}
           fill
           className="object-contain"
         />

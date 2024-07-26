@@ -22,10 +22,11 @@ export type CartProductType = {
   description: string;
   category: string;
   brand: number;
-  selectedImage: selectedImageType;
+  // selectedImage: selectedImageType;
   quantity: number;
   price: number;
   packageInfo: Package;
+  selectedImage?: any;
   productType: ProductType;
 };
 
@@ -58,7 +59,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     description: product.description,
     category: product.category,
     brand: product.brand,
-    selectedImage: { ...product.images[0] },
+    selectedImage: product.images[0],
     quantity: 1,
     price: product.price,
     productType: product.productType,
@@ -70,15 +71,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       declaredValue: product.packageInfo.declaredValue,
     },
   });
-
-  // useEffect(() => {
-  //   // console.log("product ", product);
-
-  //   console.log("packageInfo", product);
-  // }, [cartProduct]);
-  useEffect(() => {
-    console.log("cartProduct 💙", cartProduct);
-  }, [cartProduct]);
 
   const handleColorSelect = useCallback(
     (value: selectedImageType) => {
@@ -126,6 +118,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   if (!product) {
     return <></>;
   }
+
   return (
     <div className="grid grid-cols-1  md:grid-cols-2 gap-12 mt-6">
       <ProductImage
