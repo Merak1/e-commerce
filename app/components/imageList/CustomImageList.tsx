@@ -18,9 +18,9 @@ const CustomImageList: React.FC<CustomImageListProps> = ({
     <>
       {/* <ImageList sx={{ width: 500, height: 450 }} cols={4} rowHeight={164}> */}
       <ImageList
-        sx={{ width: 350, height: 350 }}
-        cols={4}
-        rowHeight={164}
+        sx={{ width: 1, height: 200 }}
+        cols={3}
+        rowHeight={200}
         gap={3}
       >
         {itemData &&

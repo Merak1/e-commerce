@@ -47,7 +47,10 @@ const ImageElement: React.FC<ImageElementProps> = ({
       className="hover:cursor-pointer"
     >
       <ImageListItem
-        className={` ${isSelected ? "border-jrl border-[3px]" : ""} `}
+        // sx={{ whiteSpace: "break-spaces" }}
+        className={`
+            p-2 
+           ${isSelected ? "border-jrl border-[3px]" : ""} `}
       >
         <img
           srcSet={`${item.image}`}
@@ -57,7 +60,20 @@ const ImageElement: React.FC<ImageElementProps> = ({
           alt={item.colorCode}
           loading="lazy"
         />
-        <ImageListItemBar title={item.color} subtitle={item.author} />
+        <ImageListItemBar
+          // className="h-[80px] whitespace-nowrap wrap text-sm px-2 "
+          title={item.color}
+          subtitle={item.name}
+          sx={{
+            minHeight: 80,
+            // backgroundColor: "red",
+            // whiteSpace: "break-spaces",
+            // textWrap: "wrap",
+            // display: "inline-block",
+          }}
+          // position="below"
+        />
+        {/* <div>{item.name}</div> */}
       </ImageListItem>
     </div>
   );
