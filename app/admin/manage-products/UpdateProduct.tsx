@@ -23,7 +23,10 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({
     sku,
     model,
     id,
+    productType,
   } = formValues;
+  // console.log("formValues : 😢 ");
+  // console.log(formValues);
   // console.log("name : 😢 " + name);
   // console.log("description : 😢 " + description);
   // console.log("price : 😢 " + price);
@@ -47,6 +50,7 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({
     sku: sku,
     model: model,
     id,
+    productType: productType,
   };
 
   return <UpdateProductForm formValues={data} allDbImages={allDbImages} />;
