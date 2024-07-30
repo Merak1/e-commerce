@@ -40,9 +40,11 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   allDbImages,
 }) => {
   const router = useRouter();
+  const [reload, setReload] = useState(false);
   const storage = getStorage(FirebaseApp);
   const [selectedRow, setSelectedRow] = useState({});
   const [open, setOpen] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleOpenEditButton = (selectedProduct: any) => {
     console.log("🔴 modifying selected row 🔴 ");
@@ -76,6 +78,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
         sku,
         createDate,
         productType,
+        packageInfo,
       } = product;
       // console.log("product 🧅", product);
       return {
@@ -90,6 +93,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
         sku: sku,
         createDate: createDate,
         productType: productType,
+        packageInfo: packageInfo,
       };
     });
   }
@@ -262,6 +266,8 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
       >
         <div ref={customRef} className="bg-backgroundYellow mt-5">
           <UpdateProduct
+            reload={reload}
+            setReload={setReload}
             formValues={selectedRow}
             key={getUniqueString(8)}
             allDbImages={allDbImages}
