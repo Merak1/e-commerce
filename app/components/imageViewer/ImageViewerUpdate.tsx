@@ -41,7 +41,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
   // useEffect(() => {
   //   console.log("images from state", images);
   // }, [images]);
-  console.log("allDbImages 🎪", allDbImages);
+  // console.log("allDbImages 🎪", allDbImages);
 
   useEffect(() => {
     console.log(" --------🈁 allDbImages 🈁------");
@@ -71,7 +71,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
   };
 
   return (
-    <div className="bg-slate-300 p-4 m-2">
+    <div className="mt-5">
       <AccordionComponent title={"Search for existing images"}>
         <form onSubmit={handleSubmit((data) => console.log(data))}>
           <Controller
