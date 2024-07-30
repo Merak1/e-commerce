@@ -7,10 +7,14 @@ import UpdateProductForm from "./UpdateProductForm";
 interface UpdateProductProps {
   formValues: any;
   allDbImages: any;
+  setReload?: any;
+  reload?: any;
 }
 const UpdateProduct: React.FC<UpdateProductProps> = ({
   formValues,
   allDbImages,
+  reload,
+  setReload,
 }) => {
   const {
     name,
@@ -23,10 +27,11 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({
     sku,
     model,
     id,
+    packageInfo,
     productType,
   } = formValues;
-  // console.log("formValues : 😢 ");
-  // console.log(formValues);
+  console.log("formValues : 😢 ");
+  console.log(formValues);
   // console.log("name : 😢 " + name);
   // console.log("description : 😢 " + description);
   // console.log("price : 😢 " + price);
@@ -38,6 +43,8 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({
   // console.log(images[0]);
   // console.log("sku : 😢 " + sku);
   // console.log("model : 😢 " + model);
+  // console.log("packageInfo : 🚗 😢 " + packageInfo);
+  // console.log(packageInfo);
 
   const data = {
     name: name,
@@ -51,9 +58,17 @@ const UpdateProduct: React.FC<UpdateProductProps> = ({
     model: model,
     id,
     productType: productType,
+    packageInfo: packageInfo,
   };
 
-  return <UpdateProductForm formValues={data} allDbImages={allDbImages} />;
+  return (
+    <UpdateProductForm
+      setReload={setReload}
+      reload={reload}
+      formValues={data}
+      allDbImages={allDbImages}
+    />
+  );
 };
 
 export default UpdateProduct;

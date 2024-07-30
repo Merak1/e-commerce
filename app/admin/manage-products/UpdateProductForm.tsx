@@ -41,6 +41,7 @@ import { MdDelete } from "react-icons/md";
 import CurrentImageDelete from "./CurrentImageDelete";
 import { imagesArray } from "./ManageProductsClient";
 import DeleteProductExistingImages from "./DeleteProductExistingImages/DeleteProductExistingImages";
+import Container from "@/app/components/Container";
 
 export type ImageType = {
   color: string;
@@ -56,14 +57,19 @@ export type UplodedImageType = {
 interface UpdateProductFormProps {
   formValues?: any;
   allDbImages: any;
+  setReload?: any;
+  reload?: any;
 }
 export const allDbImagesContextUpdate = createContext<any>(undefined);
 
 const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
   formValues,
   allDbImages,
+  setReload,
+  reload,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  // const [reload, setReload] = useState(false);
   const [stateImage, setStateImage] = useState();
   const [images, setImages] = useState<ImageType[] | null>(null);
   const [isProductCreated, setIsProductCreated] = useState(false);
@@ -142,6 +148,8 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
       setCustomValue("images", defaultImages);
       setCustomValue("sku", defaultSku);
       setCustomValue("model", defaultModel);
+      setCustomValue("productType", defaultProductType);
+      setCustomValue("packageInfo", defaultPackageInfo);
       // console.log("defaultImages", defaultImages);
       setStateImage(defaultImages);
 
@@ -373,10 +381,12 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
       .put(`/api/product/${id}`, {
         id,
         productData,
+        notUploadedImages,
       })
       .then((response) => {
         toast.success("Product Updated Successfully");
         router.refresh();
+        // setReload((prevCheck) => !prevCheck);
       })
       .catch((error) => {
         toast.error("Oops! Failed to update product");
@@ -386,169 +396,168 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
   return (
     <>
       <allDbImagesContextUpdate.Provider value={allDbImages}>
-        <Heading title="Update a product" center />
-        <div className="m-auto flex p-3 gap-3">
-          <div className="w-1/3">
-            <Input
-              id="name"
-              label="Name"
-              disabled={isLoading}
-              register={register}
-              errors={errors}
-            />
-            <TextArea
-              id="description"
-              label="description"
-              disabled={isLoading}
-              register={register}
-              errors={errors}
-            />
-            <Input
-              id="price"
-              label="price"
-              disabled={isLoading}
-              register={register}
-              errors={errors}
-              type="number"
-            />
-            <Input
-              id="brand"
-              label="brand"
-              disabled={isLoading}
-              register={register}
-              errors={errors}
-            />
-
-            <Input
-              id="sku"
-              label="sku"
-              disabled={isLoading}
-              register={register}
-              errors={errors}
-            />
-
-            <CustomCheckBox
-              id="inStock"
-              label="This product is in stock"
-              disabled={isLoading}
-              register={register}
-            />
-          </div>
-          <div className="w-1/3 font-medium ">
-            <div className="mb-2 font-semibold ">Select a Category</div>
-            <DataListInput
-              data={categoryButtons}
-              register={register}
-              id="Category"
-              errors={errors}
-              label={formValues.category}
-              onClick={(category: any) => setCustomValue("category", category)}
-              onChange={onChangeCategory}
-            />
-
-            {/* <ImageViewer
-            existingImage={existingImage}
-            addImageToState={addImageToState}
-            removeImageFromState={removeImageFromState}
-          /> */}
-
-            <div className="w-[80%] m-auto">
+        <Container>
+          <Heading title="Update a product" center />
+          <div className="m-auto flex p-3 gap-3">
+            {/* <button onClick={() => setReload((prev: any) => !prev)}>click to update</button> */}
+            <div className="w-[25%]">
               <Input
-                id="packageInfo.h"
-                label="height h (alto cm)"
+                id="name"
+                label="Name"
                 disabled={isLoading}
                 register={register}
-                type="number"
                 errors={errors}
-                valueAsNumber={true}
+              />
+              <TextArea
+                id="description"
+                label="description"
+                disabled={isLoading}
+                register={register}
+                errors={errors}
               />
               <Input
-                id="packageInfo.w"
-                label="width w (ancho cm)"
+                id="price"
+                label="price"
                 disabled={isLoading}
                 register={register}
-                type="number"
                 errors={errors}
-                valueAsNumber={true}
+                type="number"
               />
               <Input
-                id="packageInfo.hh"
-                label="depth hh (profundidad cm)"
+                id="brand"
+                label="brand"
                 disabled={isLoading}
                 register={register}
-                type="number"
                 errors={errors}
-                valueAsNumber={true}
               />
+
               <Input
-                id="packageInfo.declaredValue"
-                label="declared value (valor declarado)"
+                id="sku"
+                label="sku"
                 disabled={isLoading}
                 register={register}
-                type="number"
                 errors={errors}
-                valueAsNumber={true}
+              />
+
+              <CustomCheckBox
+                id="inStock"
+                label="This product is in stock"
+                disabled={isLoading}
+                register={register}
               />
             </div>
-            <div className="m-auto ">
-              <p>Select product type</p>
+            <div className="w-[25%] font-medium ">
+              <div className="font-semibold ">Select a Category</div>
+              <DataListInput
+                data={categoryButtons}
+                register={register}
+                id="Category"
+                errors={errors}
+                label={formValues.category}
+                onClick={(category: any) =>
+                  setCustomValue("category", category)
+                }
+                onChange={onChangeCategory}
+              />
 
-              <div className="flex justify-center">
-                {productTypes &&
-                  productTypes.map((productType) => {
-                    return (
-                      <div key={productType} className="flex flex-col m-2 ">
-                        <h1>{productType} </h1>
-                        <input
-                          className="cursor-pointer"
-                          type="radio"
-                          value={productType}
-                          {...register("productType")}
-                        />
-                      </div>
-                    );
-                  })}
+              <div className="m-auto">
+                <Input
+                  id="packageInfo.h"
+                  label="height h (alto cm)"
+                  disabled={isLoading}
+                  register={register}
+                  type="number"
+                  errors={errors}
+                  valueAsNumber={true}
+                />
+                <Input
+                  id="packageInfo.w"
+                  label="width w (ancho cm)"
+                  disabled={isLoading}
+                  register={register}
+                  type="number"
+                  errors={errors}
+                  valueAsNumber={true}
+                />
+                <Input
+                  id="packageInfo.hh"
+                  label="depth hh (profundidad cm)"
+                  disabled={isLoading}
+                  register={register}
+                  type="number"
+                  errors={errors}
+                  valueAsNumber={true}
+                />
+                <Input
+                  id="packageInfo.declaredValue"
+                  label="declared value (valor declarado)"
+                  disabled={isLoading}
+                  register={register}
+                  type="number"
+                  errors={errors}
+                  valueAsNumber={true}
+                />
+              </div>
+              <div className="m-auto ">
+                <p>Select product type</p>
+
+                <div className="flex justify-center">
+                  {productTypes &&
+                    productTypes.map((productType) => {
+                      return (
+                        <div key={productType} className="flex flex-col m-2 ">
+                          <h1>{productType} </h1>
+                          <input
+                            className="cursor-pointer"
+                            type="radio"
+                            value={productType}
+                            {...register("productType")}
+                          />
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="w-1/3 flex flex-col flex-wrap gap-4">
-            {/* <div>
+            <div className="w-[50%] flex flex-col flex-wrap gap-2">
+              {/* <div>
             <DeleteProductExistingImages
               images={images}
               formValues={formValues}
               selectForDelete={selectForDelete}
             />
           </div> */}
-            <ImageViewer
-              existingImage={existingImage}
-              addImageToState={addImageToState}
-              removeImageFromState={removeImageFromState}
-            />
+              <ImageViewer
+                existingImage={existingImage}
+                addImageToState={addImageToState}
+                removeImageFromState={removeImageFromState}
+              />
 
-            <div className="">
-              <AccordionComponent title={"Add new images"}>
-                <div className=" grid grid-cols-2 gap-2">
-                  {productColors.map((item, index) => {
-                    return (
-                      <ColorSelector
-                        key={index + getUniqueString(2)}
-                        item={item}
-                        addImageToState={addImageToState}
-                        removeImageFromState={removeImageFromState}
-                        isProductCreated={isProductCreated}
-                      />
-                    );
-                  })}
-                </div>
-              </AccordionComponent>
+              <div className="">
+                <AccordionComponent title={"Add new images"}>
+                  <div className=" grid grid-cols-2 gap-2">
+                    {productColors.map((item, index) => {
+                      return (
+                        <ColorSelector
+                          key={index + getUniqueString(2)}
+                          item={item}
+                          addImageToState={addImageToState}
+                          removeImageFromState={removeImageFromState}
+                          isProductCreated={isProductCreated}
+                        />
+                      );
+                    })}
+                  </div>
+                </AccordionComponent>
+              </div>
             </div>
           </div>
-        </div>
-        <Button
-          label={isLoading ? "Loading" : "Update Product"}
-          onClick={handleSubmit(onSubmit)}
-        />
+          <Button
+            label={isLoading ? "Loading" : "Update Product"}
+            onClick={handleSubmit(onSubmit)}
+          />
+        </Container>
       </allDbImagesContextUpdate.Provider>
     </>
   );
