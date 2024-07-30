@@ -57,13 +57,13 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   };
 
   useEffect(() => {
-    console.log("selectedRow 😃", selectedRow);
+    console.log("selectedRow 😃🔴🔴", selectedRow);
   }, [selectedRow]);
 
   let rows: any = [];
 
   if (products) {
-    rows = products.map((product) => {
+    rows = products.map((product: any) => {
       const {
         id,
         name,
@@ -75,6 +75,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
         images,
         sku,
         createDate,
+        productType,
       } = product;
       // console.log("product 🧅", product);
       return {
@@ -88,6 +89,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
         description: description,
         sku: sku,
         createDate: createDate,
+        productType: productType,
       };
     });
   }
