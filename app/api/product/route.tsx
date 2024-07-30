@@ -25,9 +25,17 @@ export async function POST(request: Request) {
       productType,
     } = body;
 
-    // console.log("leets see if packageInfo is getting in");
-    // console.log("packageInfo 😫😫😫😫😫", packageInfo);
+    // console.log("images: 🔴");
+    // console.log(images);
 
+    let idArray: any[] = [];
+    images.forEach((colorElement: any) => {
+      const { id } = colorElement;
+      idArray.push({ id: id });
+    });
+
+    // console.log("idarray  🟠= ");
+    // console.log(idArray);
     const product = await prisma.product.create({
       data: {
         id,
@@ -37,7 +45,9 @@ export async function POST(request: Request) {
         brand,
         category,
         inStock,
-        images,
+        images: {
+          connect: idArray,
+        },
         sku,
         model,
         sales,
@@ -45,7 +55,7 @@ export async function POST(request: Request) {
         productType,
       },
     });
-
+    // console.log("product 🟡 ", product);
     return NextResponse.json(product);
   }
 }
