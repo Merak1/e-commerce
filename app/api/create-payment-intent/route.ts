@@ -30,7 +30,8 @@ export async function POST(request: Request) {
   const { items, payment_intent_id, shipping } = body;
 
   // console.log("items ", items);
-  // console.log("❎ 🟥shipping ❎ 🟥 ", shipping);
+  // console.log("❎ 🟥 shipping ❎ 🟥 ", shipping);
+  console.log("❎ 🟥 items ❎ 🟥 ", items);
   // console.log("payment_intent_id ", payment_intent_id);
   // console.log(
   //   "total before converting to cents  ",
@@ -49,7 +50,10 @@ export async function POST(request: Request) {
     paymentIntentId: payment_intent_id,
     products: items,
     shippingDetails: {},
+    addresses: {},
   };
+
+  console.log("orderData 💙", orderData);
 
   if (payment_intent_id) {
     //update the order
@@ -64,6 +68,14 @@ export async function POST(request: Request) {
         payment_intent_id,
         { amount: total }
       );
+
+      let idArray: any[] = [];
+      items.forEach((colorElement: any) => {
+        const { id } = colorElement;
+        idArray.push({ id: id });
+      });
+
+      console.log("idArray ", idArray);
       // update the order
       const [existing_order, updated_order] = await Promise.all([
         prisma?.order.findFirst({
@@ -74,7 +86,7 @@ export async function POST(request: Request) {
           where: { paymentIntentId: payment_intent_id },
           data: {
             amount: total,
-            products: items,
+            products: { connect: idArray },
           },
         }),
       ]);
@@ -100,10 +112,31 @@ export async function POST(request: Request) {
     //create the order
     orderData.paymentIntentId = paymentIntent.id;
 
-    await prisma?.order.create({
-      data: orderData,
+    const paymentIntentId = paymentIntent.id;
+
+    console.log(" currentUser 🤍", currentUser);
+
+    const order = await prisma?.order.create({
+      data: {
+        // user: { connectOrCreate: { id: currentUserId } },
+        amount: total,
+        currency: "mxn", // pesos mexicanos
+        status: "pending",
+        deliveryStatus: "pending",
+        paymentIntentId: paymentIntent.id,
+        shippingDetails: {},
+        addresses: {
+          city: "",
+          country: "",
+          line1: "",
+          postal_code: "",
+          state: "",
+        },
+        user: { connect: { id: currentUser.currentUserId } },
+      },
     });
 
+    console.log("order🧅", order);
     return NextResponse.json({ paymentIntent });
   }
 }

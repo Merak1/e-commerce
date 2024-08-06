@@ -45,7 +45,10 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
         deliveryStatus,
         user,
         createDate,
+        shippingDetails,
       } = order;
+      const { order_id, data: shippingDetailsData } = shippingDetails;
+      // const { trackingNumer, amount: shippingAmount } = shippingDetailsData;
 
       return {
         id: id,
@@ -57,6 +60,9 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
         userName: user.name,
         userEmail: user.email,
         createDate,
+        order_id,
+        // trackingNumer,
+        // shippingAmount,
       };
     });
   }
@@ -168,6 +174,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
   const [colDefs, setColDefs] = useState([
     { headerName: " id ", field: "id" },
     { headerName: " user ", field: "userName" },
+    // { headerName: " trackingNumer ", field: "trackingNumer" },
     { headerName: " date ", field: "createDate" },
     { headerName: " email ", field: "userEmail" },
     {

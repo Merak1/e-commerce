@@ -1,6 +1,7 @@
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL_PROD")
 }
 
 generator client {
@@ -40,7 +41,7 @@ model User {
 
 
   accounts      Account[]
-  orders        Order[]
+  orders        Order[]//works
 }
 model Sale {
   id String @id  @default(auto()) @map("_id") @db.ObjectId
@@ -50,25 +51,38 @@ model Sale {
   productId String @db.ObjectId
 
 }
-model Product {
+model Image {// CATEGORIES 
   id String @id  @default(auto()) @map("_id") @db.ObjectId
+  color String
+  colorCode String
+  image String
+  name String
+  productIDs String[] @db.ObjectId
+  products   Product[]   @relation(fields: [productIDs], references: [id])
+}
+
+model Product { // POST 
+  id String @id  @default(auto()) @map("_id") @db.ObjectId
+  imageIDs String[] @db.ObjectId
+  images  Image[] @relation(fields: [imageIDs], references: [id])
   name String
   description String
   price Float
   brand String
   category String
   inStock Boolean
-  images Image[]
   sku String
   model String
   createDate DateTime @default(now())
   packageInfo Package
   productType ProductType
   sales Sale[]
+  orderIds String[] @db.ObjectId
+  orders Order[] @relation(fields: [orderIds], references: [id])
 }
 
 
-model Order {
+model Order { //order has products
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   userId        String @db.ObjectId
   amount        Float 
@@ -77,9 +91,11 @@ model Order {
   deliveryStatus String?
   createDate DateTime @default(now())
   paymentIntentId String @unique
-  products CartProductType[]
+  // products CartProductType[]
   addresses Address?
   shippingDetails ShippingDetail?
+  productsIds String[] @db.ObjectId
+  products Product[] @relation(fields: [productsIds], references: [id])
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -112,7 +128,7 @@ enum ProductType  {
   description String
   category String
   brand String
-  selectedImage Image
+  selectedImage ImageType
   quantity Int
   price Float
   packageInfo Package
@@ -128,10 +144,11 @@ type Package  {
   // weightUnit String 
   declaredValue Int
 }
-type Image {
+type ImageType {
   color String
   colorCode String
   image String
+  name String
 }
 
 type Address {

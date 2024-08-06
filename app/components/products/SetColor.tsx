@@ -9,7 +9,7 @@ import { dividerClasses } from "@mui/material";
 interface SetColorProps {
   images: selectedImageType[];
   cartProduct: CartProductType;
-  handleColorSelect: (value: selectedImageType) => void;
+  handleColorSelect?: (value: selectedImageType) => void;
 }
 
 const SetColor: React.FC<SetColorProps> = ({
@@ -17,6 +17,7 @@ const SetColor: React.FC<SetColorProps> = ({
   cartProduct,
   handleColorSelect,
 }) => {
+  return <div></div>;
   return (
     <div>
       <div className="flex gap-4 items-center">

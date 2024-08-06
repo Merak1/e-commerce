@@ -29,7 +29,7 @@ const ManageOrdersClient1: React.FC<ManageOrdersClientProps> = ({ orders }) => {
   let rows: any = [];
 
   if (orders) {
-    rows = orders.map((order) => {
+    rows = orders.map((order: any) => {
       console.log("order", order);
       const {
         id,
@@ -40,25 +40,36 @@ const ManageOrdersClient1: React.FC<ManageOrdersClientProps> = ({ orders }) => {
         deliveryStatus,
         user,
         createDate,
+        shippingDetails,
       } = order;
+      const { success, order_id, data: shippingDetailsData } = shippingDetails;
+      const { trackingNumber, amount: shippingAmount } = shippingDetailsData;
       return {
         id: id,
         userId: userId,
-        amount: formatPrice(amount),
+        // amount: formatPrice(amount),
+        amount: formatPrice(amount / 100),
         currency: currency,
         status: status,
         deliveryStatus: deliveryStatus,
         userName: user.name,
         userEmail: user.email,
         createDate,
+        shippingDetails,
+        success,
+        order_id,
+        shippingDetailsData,
+        trackingNumber,
+        shippingAmount,
       };
     });
   }
-
   const columns: GridColDef[] = [
-    { field: "id", headerName: "Id", width: 230 },
+    { field: "id", headerName: "Id", width: 100 },
     { field: "userName", headerName: "User", width: 100 },
     { field: "createDate", headerName: "createDate", width: 130 },
+    { field: "order_id", headerName: "order_id", width: 90 },
+    { field: "trackingNumber", headerName: "trackingNumber", width: 130 },
     { field: "userEmail", headerName: "Email", width: 160 },
     {
       field: "amount",

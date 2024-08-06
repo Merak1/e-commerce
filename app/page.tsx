@@ -7,6 +7,9 @@ import NullData from "./components/NullData";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Test from "./components/test";
 
 interface HomeProps {
   searchParams: IProductParams;
@@ -14,7 +17,7 @@ interface HomeProps {
 
 export default async function Home({ searchParams }: HomeProps) {
   const products = await getProducts(searchParams);
-
+  console.log("products 🔴", products);
   if (products.length === 0) {
     return <NullData title="no products found" />;
   }
@@ -24,6 +27,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <Container>
         <HomeBanner />
         <div>
+          {/* <Test /> */}
           <div
             className="grid grid-cols-2 sm:grid-cols-3
               lg:grid-cols-4 xl:grid-cols-5 

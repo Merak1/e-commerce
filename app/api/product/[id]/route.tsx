@@ -21,7 +21,7 @@ export async function PUT(request: Request) {
       return NextResponse.error();
     }
     const body = await request.json();
-    const { id, productData } = body;
+    const { id, productData, notUploadedImages } = body;
 
     const {
       name,
@@ -38,19 +38,32 @@ export async function PUT(request: Request) {
       productType,
     } = productData;
 
-    console.log("id", id);
-    console.log("name", name);
-    console.log("description", description);
-    console.log("price", price);
-    console.log("brand", brand);
-    console.log("category", category);
-    console.log("inStock", inStock);
-    console.log("images", images);
-    console.log("sku", sku);
-    console.log("model", model);
-    console.log("sales", sales);
-    console.log("packageInfo", packageInfo);
-    console.log("productType", productType);
+    const { h, w, hh, weight, declaredValue } = packageInfo;
+
+    // console.log(" 🔴 id", id);
+    // console.log(" 🟠 productData", productData);
+    // console.log(" 🟡 notUploadedImages", notUploadedImages);
+
+    let idArray: any[] = [];
+    images.forEach((colorElement: any) => {
+      const { id } = colorElement;
+      idArray.push({ id: id });
+    });
+
+    console.log(" 🟢 idArray", idArray);
+    // console.log("id", id);
+    // console.log("name", name);
+    // console.log("description", description);
+    // console.log("price", price);
+    // console.log("brand", brand);
+    // console.log("category", category);
+    // console.log("inStock", inStock);
+    // console.log("images", images);
+    // console.log("sku", sku);
+    // console.log("model", model);
+    // console.log("sales", sales);
+    console.log("🔵 packageInfo", packageInfo);
+    // console.log("productType", productType);
     // console.log("leets see if packageInfo is getting in");
     // console.log("packageInfo 😫😫😫😫😫", packageInfo);
 
@@ -64,15 +77,25 @@ export async function PUT(request: Request) {
         brand,
         category,
         inStock,
-        images,
+        images: {
+          connect: idArray,
+        },
         sku,
         model,
         sales,
-        packageInfo,
+        // packageInfo,
+        packageInfo: {
+          h: h,
+          w: w,
+          hh: hh,
+          weight: weight,
+          declaredValue: declaredValue,
+        },
         productType,
       },
     });
 
     return NextResponse.json(product);
+    // return NextResponse.json(body); // for debuggindg
   }
 }

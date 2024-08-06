@@ -14,7 +14,8 @@ export async function PUT(request: Request) {
       const { payment_intent_id, packagesDetails: shippingDetails } = body;
       const { success, order_id, data, courier } = shippingDetails;
       const { orderId, trackingNumber, labelsNumber, amount, dataArray } = data;
-
+      console.log("🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢🟢");
+      console.log("🟢 courier🟢", courier);
       const order = await prisma.order.update({
         where: { paymentIntentId: payment_intent_id },
         data: {

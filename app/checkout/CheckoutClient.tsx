@@ -57,6 +57,10 @@ const CheckoutClient: React.FC<CheckoutClientProps> = ({
       setLoading(true);
       setError(false);
 
+      console.log("items  cartProducts ", cartProducts);
+      console.log("shippingPrice ", shippingPrice);
+      console.log("paymentIntent ", paymentIntent);
+
       fetch("/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -79,9 +83,12 @@ const CheckoutClient: React.FC<CheckoutClientProps> = ({
         })
         .then((data) => {
           //get client secret
+          // if (data) {
+          console.log("data received", data);
           setClientSecret(data.paymentIntent.client_secret);
           // update payment intent to localstorage
           handleSetPaymentIntent(data.paymentIntent.id);
+          // }
         })
         .catch((err) => {
           setError(true);

@@ -1,5 +1,5 @@
 import Container from "@/app/components/Container";
-import ManageOrdersClient from "./ManageOrdersClient";
+import ManageOrdersClient from "./ManageOrdersClient1";
 import getOrders from "@/actions/getOrders";
 
 const ManageOrders = async () => {

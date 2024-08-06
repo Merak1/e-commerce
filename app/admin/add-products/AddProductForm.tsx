@@ -34,6 +34,7 @@ export type ImageType = {
   color: string;
   colorCode: string;
   image: File | null;
+  name?: string;
 };
 export type UplodedImageType = {
   color: string;
@@ -43,23 +44,33 @@ export type UplodedImageType = {
 
 interface AddProductFormProps {
   formValues?: any;
-  allDbImages: imagesArray;
+  allImages?: imagesArray | any;
 }
 export const allDbImagesContextAdd = createContext<any>(undefined);
 
 const AddProductForm: React.FC<AddProductFormProps> = ({
   formValues,
-  allDbImages,
+  allImages,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [images, setImages] = useState<ImageType[] | null>(null);
+  const [images, setImages] = useState<ImageType[] | any>(null);
+  const [selectedImages, setSelectedImages] = useState<any>();
   const [isProductCreated, setIsProductCreated] = useState(false);
+  const [isImageCreated, setIsImageCreated] = useState(false);
   const [imagesUrls, setImagesUrls] = useState<any>();
   const router = useRouter();
+  let updloadedImages: UplodedImageType[] = [];
 
   useEffect(() => {
-    console.log("⚫⚪ allDbImages ⚫⚪", allDbImages);
-  }, [allDbImages]);
+    console.log(" IMAGES seleccionadas de las existentes  🐟", images);
+  }, [images]);
+  useEffect(() => {
+    console.log(" IMAGES seleccionadas nuevas de upload 🦈", selectedImages);
+  }, [selectedImages]);
+
+  useEffect(() => {
+    console.log("⚫⚪ allImages ⚫⚪", allImages);
+  }, [allImages]);
 
   const {
     name: defaultName,
@@ -96,7 +107,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
       productType: "",
       packageInfo: {
         h: 0,
-        w: 0,
+        // w: 0,
         hh: 0,
         weight: 0,
         declaredValue: 0,
@@ -148,6 +159,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
       reset();
       setImages(null);
       setIsProductCreated(false);
+      setIsImageCreated(false);
     }
   }, [isProductCreated]);
 
@@ -164,8 +176,29 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
     });
   };
 
+  const addImageToDB = useCallback((images: ImageType[]) => {}, []);
+
+  const addImageToStateNewImage = useCallback((value: ImageType) => {
+    setSelectedImages((prev: any) => {
+      if (!prev) {
+        return [value];
+      }
+      return [...prev, value];
+    });
+  }, []);
+  const removeImageFromStateNewImage = useCallback((value: ImageType) => {
+    setSelectedImages((prev: any) => {
+      if (prev) {
+        const filteredImages = prev.filter(
+          (item: any) => item.color !== value.color
+        );
+        return filteredImages;
+      }
+      return prev;
+    });
+  }, []);
   const addImageToState = useCallback((value: ImageType) => {
-    setImages((prev) => {
+    setImages((prev: any) => {
       if (!prev) {
         return [value];
       }
@@ -173,74 +206,23 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
     });
   }, []);
   const removeImageFromState = useCallback((value: ImageType) => {
-    setImages((prev) => {
+    setImages((prev: any) => {
       if (prev) {
         const filteredImages = prev.filter(
-          (item) => item.color !== value.color
+          (item: any) => item.color !== value.color
         );
         return filteredImages;
       }
       return prev;
     });
   }, []);
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log("Product data ", data);
-    //TODO upload image to firebase
 
-    setIsLoading(true);
-    let updloadedImages: UplodedImageType[] = [];
-
-    if (!data.price) {
-      setIsLoading(false);
-      return toast.error("Price is not selected");
-    }
-    if (!data.name) {
-      setIsLoading(false);
-      return toast.error("Name is not selected");
-    }
-    if (!data.description) {
-      setIsLoading(false);
-      return toast.error("Description is not selected");
-    }
-    if (!data.brand) {
-      setIsLoading(false);
-      return toast.error("Brand is not selected");
-    }
-    if (!data.category) {
-      setIsLoading(false);
-      return toast.error("Category is not selected");
-    }
-    if (!data.inStock) {
-      setIsLoading(false);
-      return toast.error("Instock is not selected");
-    }
-    if (!data.sku) {
-      setIsLoading(false);
-      return toast.error("Sku is not selected");
-    }
-    // if (!data.model) {
-    //   setIsLoading(false);
-    //   return toast.error("Model is not selected");
-    // }
-    if (!data.packageInfo) {
-      setIsLoading(false);
-      return toast.error("Packageinfo is not selected");
-    }
-    if (!data.productType) {
-      setIsLoading(false);
-      return toast.error("Producttype is not selected");
-    }
-
-    if (!data.images || data.images.length === 0) {
-      setIsLoading(false);
-      return toast.error("Images are not selected");
-    }
-
+  const handleImageUpload = async (data: any) => {
     const handleImageUploads = async () => {
       toast("Creating product...");
 
       try {
-        for (const item of data.images) {
+        for (const item of images) {
           if (item.image) {
             // console.log("item.image: 💀💀💀💀" + item);
             console.log(`${item.image.name}   ---💀💀💀💀`);
@@ -280,6 +262,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
                       updloadedImages.push({
                         ...item,
                         image: downloadURL,
+                        name: fileName,
                       });
                       console.log("File available at", downloadURL);
                       resolve();
@@ -306,9 +289,117 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
     //TODO save product to mongo
 
     await handleImageUploads();
+    console.log("data", data);
     const productData = { ...data, images: updloadedImages };
+    // const productData = { ...data, images: updloadedImages };
     setImagesUrls(updloadedImages);
-    console.log("PRoduct data: " + productData);
+    // console.log("PRoduct data: " + productData);
+    console.log("🟠🟠 updloadedImages 🟠🟠 " + updloadedImages);
+    console.log(updloadedImages);
+
+    //iterate through the updloaded images and for each one
+    // we add it to the image db
+    updloadedImages.forEach((updloadedImage: any) => {
+      axios
+        .post("/api/create-image", updloadedImage)
+        .then(() => {
+          toast.success("Image uploaded successfully");
+          // setIsProductCreated(true);
+          // setIsImageCreated(true);
+          router.refresh();
+        })
+        .catch((error: any) => {
+          toast.error("Something went wrong please try again", error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    });
+  };
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    console.log("Product data ", data);
+    //TODO upload image to firebase
+
+    setIsLoading(true);
+    // let updloadedImages: UplodedImageType[] = [];
+
+    // if (!data.price) {
+    //   setIsLoading(false);
+    //   return toast.error("Price is not selected");
+    // }
+    // if (!data.name) {
+    //   setIsLoading(false);
+    //   return toast.error("Name is not selected");
+    // }
+    // if (!data.description) {
+    //   setIsLoading(false);
+    //   return toast.error("Description is not selected");
+    // }
+    // if (!data.brand) {
+    //   setIsLoading(false);
+    //   return toast.error("Brand is not selected");
+    // }
+    // if (!data.category) {
+    //   setIsLoading(false);
+    //   return toast.error("Category is not selected");
+    // }
+    // if (!data.inStock) {
+    //   setIsLoading(false);
+    //   return toast.error("Instock is not selected");
+    // }
+    // if (!data.sku) {
+    //   setIsLoading(false);
+    //   return toast.error("Sku is not selected");
+    // }
+    // // if (!data.model) {
+    // //   setIsLoading(false);
+    // //   return toast.error("Model is not selected");
+    // // }
+    // if (!data.packageInfo) {
+    //   setIsLoading(false);
+    //   return toast.error("Packageinfo is not selected");
+    // }
+    // if (!data.productType) {
+    //   setIsLoading(false);
+    //   return toast.error("Producttype is not selected");
+    // }
+
+    if (!data.images || data.images.length === 0) {
+      setIsLoading(false);
+      return toast.error("Images are not selected");
+    }
+    // toast.success(`${images}`);
+    // axios
+    //   .post("/api/add-image-to-product", images)
+    //   .then(() => {
+    //     toast.success("Image added to product successfully");
+    //     // setIsProductCreated(true);
+    //     // setIsImageCreated(true);
+    //     router.refresh();
+    //   })
+    //   .catch((error: any) => {
+    //     toast.error("Something went wrong please try again", error);
+    //   })
+    //   .finally(() => {
+    //     setIsLoading(false);
+    //   });
+    // axios
+    //   .post("/api/image", updloadedImages)
+    //   .then(() => {
+    //     toast.success("Image uploaded successfully");
+    //     // setIsProductCreated(true);
+    //     // setIsImageCreated(true);
+    //     router.refresh();
+    //   })
+    //   .catch((error: any) => {
+    //     toast.error("Something went wrong please try again", error);
+    //   })
+    //   .finally(() => {
+    //     setIsLoading(false);
+    //   });
+
+    const productData = { ...data, images };
 
     axios
       .post("/api/product", productData)
@@ -326,11 +417,11 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
   };
   return (
     <>
-      <allDbImagesContextAdd.Provider value={allDbImages}>
+      <allDbImagesContextAdd.Provider value={allImages}>
         <Heading title="Add a product" center />
         {/* <div className=" max-w-3xl m-auto flex"> */}
-        <div className="m-auto flex p-3 gap-3">
-          <div className="w-1/3">
+        <div className=" m-auto justify-between flex  p-1 gap-3">
+          <div className="w-[25%]">
             <Input
               id="name"
               label="Name"
@@ -376,7 +467,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
               register={register}
             />
           </div>
-          <div className="w-1/3 font-medium ">
+          <div className="w-[25%] font-medium ">
             <div className="mb-2 font-semibold ">Select a Category</div>
             {/* <div className="grid grid-cols-2 md:grid-cols-5 gap-1  overflow-auto">
             {categoryButtons.map((item) => {
@@ -403,7 +494,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
               onChange={onChangeCategory}
             />
 
-            <div className="w-[80%] m-auto">
+            <div className=" m-auto">
               <Input
                 id="packageInfo.h"
                 label="height h (alto cm)"
@@ -433,7 +524,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
               />
               <Input
                 id="packageInfo.declaredValue"
-                label="declared value (valor declarado)"
+                label="valor declarado"
                 disabled={isLoading}
                 register={register}
                 type="number"
@@ -463,7 +554,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
             </div>
           </div>
 
-          <div className="w-1/3 flex flex-col flex-wrap gap-4">
+          <div className="w-[50%] flex flex-col flex-wrap gap-2">
             {/* <div>
             <div className="font-bold">Select available colors</div>
             <div className="text-sm">Please select all available colors</div>
@@ -496,13 +587,14 @@ const AddProductForm: React.FC<AddProductFormProps> = ({
                       <ColorSelector
                         key={index + getUniqueString(2)}
                         item={item}
-                        addImageToState={addImageToState}
-                        removeImageFromState={removeImageFromState}
+                        addImageToState={addImageToStateNewImage}
+                        removeImageFromState={removeImageFromStateNewImage}
                         isProductCreated={isProductCreated}
                       />
                     );
                   })}
                 </div>
+                <Button label="upload new image" onClick={handleImageUpload} />
               </AccordionComponent>
             </div>
           </div>

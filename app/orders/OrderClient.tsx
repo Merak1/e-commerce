@@ -29,24 +29,54 @@ const OrdersClient: React.FC<OrdersClientProps> = ({ orders }) => {
   let rows: any = [];
 
   if (orders) {
-    rows = orders.map((order) => {
-      const { userId, amount, currency, status, deliveryStatus, user } = order;
+    console.log(orders);
+    rows = orders.map((order: any) => {
+      const {
+        userId,
+        amount,
+        currency,
+        status,
+        deliveryStatus,
+        user,
+        shippingDetails,
+      } = order;
+      const { success, order_id, data: shippingDetailsData } = shippingDetails;
+      const { trackingNumber, amount: shippingAmount } = shippingDetailsData;
+
       return {
         id: order.id,
         userId: userId,
-        amount: formatPrice(amount),
+        amount: formatPrice(amount / 100),
         currency: currency,
         status: status,
         deliveryStatus: deliveryStatus,
         userName: user.name,
         userEmail: user.email,
+        shippingDetails,
+        success,
+        order_id,
+        shippingDetailsData,
+        trackingNumber,
+        shippingAmount,
       };
     });
   }
 
   const columns: GridColDef[] = [
     { field: "userId", headerName: "Id", width: 140 },
-    { field: "userName", headerName: "User", width: 130 },
+    { field: "userName", headerName: "User", width: 90 },
+
+    { field: "order_id", headerName: "order_id", width: 90 },
+    { field: "trackingNumber", headerName: "trackingNumber", width: 130 },
+    {
+      field: "shippingAmount",
+      headerName: "shipping cost",
+      width: 130,
+      renderCell: (params) => {
+        console.log("params: " + params);
+        return <div className="text-center">{params.row.userId}</div>;
+      },
+    },
     { field: "userEmail", headerName: "Email", width: 160 },
     {
       field: "amount",
@@ -85,39 +115,39 @@ const OrdersClient: React.FC<OrdersClientProps> = ({ orders }) => {
       },
     },
 
-    {
-      field: "deliveryStatus",
-      headerName: "Delivery Status",
-      width: 120,
-      renderCell: (params) => {
-        return (
-          <div className="">
-            {params.row.deliveryStatus === "pending" ? (
-              <Status
-                text="pending"
-                bg="bg-slate-200"
-                icon={MdAccessTimeFilled}
-                color="text-slate-700"
-              />
-            ) : params.row.deliveryStatus === "dispatched" ? (
-              <Status
-                text="dispatched"
-                bg="bg-purple-200"
-                icon={MdDeliveryDining}
-                color="text-purple-700"
-              />
-            ) : params.row.deliveryStatus === "delivered" ? (
-              <Status
-                text="delivered"
-                bg="bg-green-200"
-                icon={MdDone}
-                color="text-green-700"
-              />
-            ) : null}
-          </div>
-        );
-      },
-    },
+    // {
+    //   field: "deliveryStatus",
+    //   headerName: "Delivery Status",
+    //   width: 120,
+    //   renderCell: (params) => {
+    //     return (
+    //       <div className="">
+    //         {params.row.deliveryStatus === "pending" ? (
+    //           <Status
+    //             text="pending"
+    //             bg="bg-slate-200"
+    //             icon={MdAccessTimeFilled}
+    //             color="text-slate-700"
+    //           />
+    //         ) : params.row.deliveryStatus === "dispatched" ? (
+    //           <Status
+    //             text="dispatched"
+    //             bg="bg-purple-200"
+    //             icon={MdDeliveryDining}
+    //             color="text-purple-700"
+    //           />
+    //         ) : params.row.deliveryStatus === "delivered" ? (
+    //           <Status
+    //             text="delivered"
+    //             bg="bg-green-200"
+    //             icon={MdDone}
+    //             color="text-green-700"
+    //           />
+    //         ) : null}
+    //       </div>
+    //     );
+    //   },
+    // },
 
     {
       field: "action",

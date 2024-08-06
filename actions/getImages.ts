@@ -38,10 +38,15 @@ export default async function getImages(params: IProductParams) {
     });
 
     // console.log("produts from getImages", products);
-    let images: { color: string; colorCode: string; image: string }[] = [];
-    products.forEach((product) => {
+    let images: {
+      color: string;
+      colorCode: string;
+      image: string;
+      name: string;
+    }[] = [];
+    products.forEach((product: any) => {
       // console.log("im one product.images 🟠 ", product.images);
-      images = [...images, ...product.images];
+      images = [...images, ...product.imageIDs];
     });
 
     console.log("images 😫", images.length);

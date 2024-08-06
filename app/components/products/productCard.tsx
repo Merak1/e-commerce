@@ -32,8 +32,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     images,
     productType,
     packageInfo,
+    imageIDs,
   } = product;
-  const imagesAmount = images.length;
+  // console.log("images 🟤 🟢", images);
+  // console.log("product 🔺", product);
+  // console.log("🟤 🟢  imageIDs 🟤 🟢", imageIDs);
+  const imagesAmount = images?.length;
   const router = useRouter();
   const { handleAddProductToCart } = useCart();
   const [imageSelected, setImageSelected] = useState(0);
